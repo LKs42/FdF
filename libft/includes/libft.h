@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/04/26 15:00:40 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/05/03 16:45:12 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,24 @@ typedef struct		s_list
 	size_t			content_size;
 	struct s_list	*next;
 }					t_list;
+
+typedef struct	s_scene
+{
+	void	*mlx_ptr;
+	void	*win_ptr;
+	void	*img_ptr;
+	char	*title;
+	int		*str;
+	int 	win_width;
+	int		win_height;
+}				t_scene;
+
+typedef struct	s_point
+{
+	float x;
+	float y;
+	float z;
+}				t_point;
 
 size_t				ft_strlen(const char *str);
 int					ft_atoi(const char *str);
