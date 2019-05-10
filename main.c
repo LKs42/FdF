@@ -234,31 +234,31 @@ t_scene	*init_scene(int w, int h, void *mlx, char *str)
 	return (scene);
 }
 
-void	ft_initpoints(t_point **points)
+void	ft_initpoints(t_point **points, int nb)
 {
 	int i = 0;
 	int j = 0;
 	int cp = 0;
-	int xo = 10;
-	int yo = 10;
-	while (i < 10)
+	int xo = 20;
+	int yo = 20;
+	while (i < nb)
 	{
-		while (j < 10)
+		while (j < nb)
 		{
 		points[cp] = malloc(sizeof(t_point));
 		points[cp]->x = xo;
 		points[cp]->y = yo;
 		ft_putnbr(xo);
 		ft_putchar('\n');
-		xo += 10;
+		xo += 20;
 		cp++;
 		j++;
 		}
 		j = 0;
-		yo += 10;
+		yo += 20;
 		ft_putnbr(yo);
 		ft_putchar('\n');
-		xo = 10;
+		xo = 20;
 		i++;
 	}
 }
@@ -274,7 +274,7 @@ int main()
 	int bpp;
 	int sl;
 	int endian;
-	int a = 100;
+	int a = 50;
 
 	mlx_ptr = mlx_init();
 	t_scene *scene;
@@ -286,7 +286,7 @@ int main()
 
 	t_point **points;
 
-	points = malloc(sizeof(t_point) * 1000);
+	points = malloc(sizeof(t_point) * 10000);
 	t_point *p1;
 	t_point *p2;
 	p1 = malloc(sizeof(t_point));
@@ -298,12 +298,19 @@ int main()
 	//points[0] = p1;
 	//points[1] = p2;
 	//points[2] = 0;
-	ft_initpoints(points);
+	ft_initpoints(points, a);
 
 	int i = 1;
-	while ( i < 100)
+	while ( i < a * a)
 	{
-		liner(scene->str, points[i - 1], points[i]);
+		if (!(i % a == 0))
+			liner(scene->str, points[i - 1], points[i]);
+		i++;
+	}
+	i = 0;
+	while ( i + a < a * a)
+	{
+			liner(scene->str, points[i], points[i + a]);
 		i++;
 	}
 	//liner(scene->str, 100, 100, 100, 500);
