@@ -1,8 +1,9 @@
 #include "mlx.h"
 #include "libft.h"
 #include <unistd.h>
-#define WIDTH 1280
-#define HEIGHT 720
+#include <math.h>
+#define WIDTH 2000 
+#define HEIGHT 2000
 
 void	ft_draw_something(void *mlx_ptr, void *win_ptr, int x, int y, int size)
 {
@@ -141,7 +142,58 @@ void	line(int *img, t_point *a, t_point *b, int color)
 	}
 }
 
-void liner(int *img, int x0, int y0, int x1, int y1) {
+void liner4(int *img, t_point *a, t_point *b) {
+	int *img2;
+   	img2 = img;
+	int dx = abs(b->x - a->x), sx = a->x < b->x ? 1 : -1;
+	int dy = abs(b->y - a->y), sy = a->y < b->y ? 1 : -1; 
+	int err = (dx>dy ? dx : -dy)/2, e2;
+	ft_putendl("ok");
+	while(!(a->x == b->x && a->y == b->y))
+	{
+		fill_pixel(img2, a->x, a->y, 10);
+		e2 = err;
+		if (e2 > -dx) { err -= dy; a->y += sx; }
+		if (e2 < dy) { err += dx; a->y += sy; }
+	}
+}
+
+void liner(int *img, t_point *a, t_point *b) {
+	int x0 = a->x;
+	int x1 = b->x;
+	int y0 = a->y;
+	int y1 = b->y;
+	
+	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
+	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
+	int err = (dx>dy ? dx : -dy)/2, e2;
+
+	while(!(x0==x1 && y0==y1))
+	{
+		fill_pixel(img, x0, y0, 10);
+		e2 = err;
+		if (e2 >-dx) { err -= dy; x0 += sx; }
+		if (e2 < dy) { err += dx; y0 += sy; }
+	}
+}
+
+
+void liner2(int *img, int x0, int y0, int x1, int y1) {
+
+	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
+	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
+	int err = (dx>dy ? dx : -dy)/2, e2;
+
+	while(!(x0==x1 && y0==y1))
+	{
+		fill_pixel(img, x0, y0, 10);
+		e2 = err;
+		if (e2 >-dx) { err -= dy; x0 += sx; }
+		if (e2 < dy) { err += dx; y0 += sy; }
+	}
+}
+
+void linerDOO(int *img, int x0, int y0, int x1, int y1) {
 
 	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
 	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
@@ -182,6 +234,35 @@ t_scene	*init_scene(int w, int h, void *mlx, char *str)
 	return (scene);
 }
 
+void	ft_initpoints(t_point **points)
+{
+	int i = 0;
+	int j = 0;
+	int cp = 0;
+	int xo = 10;
+	int yo = 10;
+	while (i < 10)
+	{
+		while (j < 10)
+		{
+		points[cp] = malloc(sizeof(t_point));
+		points[cp]->x = xo;
+		points[cp]->y = yo;
+		ft_putnbr(xo);
+		ft_putchar('\n');
+		xo += 10;
+		cp++;
+		j++;
+		}
+		j = 0;
+		yo += 10;
+		ft_putnbr(yo);
+		ft_putchar('\n');
+		xo = 10;
+		i++;
+	}
+}
+
 int main()
 {
 	void	*mlx_ptr;
@@ -197,28 +278,44 @@ int main()
 
 	mlx_ptr = mlx_init();
 	t_scene *scene;
-	scene = init_scene(1280, 720, mlx_ptr, "hell world");
+	scene = init_scene(2000, 2000, mlx_ptr, "hell world");
 	scene->img_ptr = mlx_new_image(scene->mlx_ptr, scene->win_width, scene->win_height);
 	str = (int*)mlx_get_data_addr(scene->img_ptr, &bpp, &sl, &endian);
 	scene->str = str;
 	fill_img(scene, 11894015);
 
+	t_point **points;
 
-
+	points = malloc(sizeof(t_point) * 1000);
 	t_point *p1;
 	t_point *p2;
 	p1 = malloc(sizeof(t_point));
 	p2 = malloc(sizeof(t_point));
-	p1->x = 1000;
-	p2->x = 100;
-	p2->y = 200;
-	p1->y = 250;
+	p1->x = 430;
+	p1->y = 130;
+	p2->x = 70;
+	p2->y = 700;
+	//points[0] = p1;
+	//points[1] = p2;
+	//points[2] = 0;
+	ft_initpoints(points);
 
-	liner(scene->str, 100, 100, 100, 500);
-	liner(scene->str, 100, 100, 500, 100);
-	liner(scene->str, 100, 500, 500, 500);
-	liner(scene->str, 500, 500, 500, 100);
+	int i = 1;
+	while ( i < 100)
+	{
+		liner(scene->str, points[i - 1], points[i]);
+		i++;
+	}
+	//liner(scene->str, 100, 100, 100, 500);
+	//liner(scene->str, 100, 100, 500, 100);
+	//liner(scene->str, 100, 500, 500, 500);
+	//liner2(scene->str, 430, 130, 70, 600);
+	//liner(scene->str, 430, 130, 70, 700);
+	ft_putendl("y");
+	//liner(scene->str, p1, p2);
+	//liner(scene->str, points[0], points[1]);
 
+	ft_putendl("y");
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	mlx_key_hook(scene->win_ptr, deal_key, scene);
 
