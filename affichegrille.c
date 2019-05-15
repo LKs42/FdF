@@ -130,14 +130,47 @@ float	diagonal_dist(float ax, float ay, float bx, float by)
 	return (ft_fmax(ABS(dx), ABS(dy)));
 }
 
-void liner2(int *img, int x0, int y0, int x1, int y1, int color) {
+void	line(int *img, t_point *a, t_point *b, int color)
+{
+	float n;
+	float t;
+	n = diagonal_dist(a->x, a->y, b->x, b->y);
+	for (int step = 0; step <= n; step++)
+	{
+		t = n == 0 ? 0.0 : step / n;
+		fill_pixel_point(img, round_point(lerp_point(a, b, t)), color);
+	}
+}
+
+void liner4(int *img, t_point *a, t_point *b) {
+	int *img2;
+   	img2 = img;
+	int dx = abs(b->x - a->x), sx = a->x < b->x ? 1 : -1;
+	int dy = abs(b->y - a->y), sy = a->y < b->y ? 1 : -1; 
+	int err = (dx>dy ? dx : -dy)/2, e2;
+	ft_putendl("ok");
+	while(!(a->x == b->x && a->y == b->y))
+	{
+		fill_pixel(img2, a->x, a->y, 10);
+		e2 = err;
+		if (e2 > -dx) { err -= dy; a->y += sx; }
+		if (e2 < dy) { err += dx; a->y += sy; }
+	}
+}
+
+void liner(int *img, t_point *a, t_point *b) {
+	int x0 = a->x;
+	int x1 = b->x;
+	int y0 = a->y;
+	int y1 = b->y;
+	
 	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
 	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
 	int err = (dx>dy ? dx : -dy)/2, e2;
 
 	while(!(x0==x1 && y0==y1))
 	{
-		fill_pixel(img, x0, y0, color);
+		fill_pixel(img, x0, y0, 10);
 		e2 = err;
 		if (e2 >-dx) { err -= dy; x0 += sx; }
 		if (e2 < dy) { err += dx; y0 += sy; }
@@ -145,11 +178,7 @@ void liner2(int *img, int x0, int y0, int x1, int y1, int color) {
 }
 
 
-void liner(int *img, t_point *a, t_point *b, int color) {
-	int x0 = a->x;
-	int x1 = b->x;
-	int y0 = a->y;
-	int y1 = b->y;
+void liner2(int *img, int x0, int y0, int x1, int y1) {
 
 	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
 	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
@@ -157,7 +186,22 @@ void liner(int *img, t_point *a, t_point *b, int color) {
 
 	while(!(x0==x1 && y0==y1))
 	{
-		fill_pixel(img, x0, y0, color);
+		fill_pixel(img, x0, y0, 10);
+		e2 = err;
+		if (e2 >-dx) { err -= dy; x0 += sx; }
+		if (e2 < dy) { err += dx; y0 += sy; }
+	}
+}
+
+void linerDOO(int *img, int x0, int y0, int x1, int y1) {
+
+	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
+	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
+	int err = (dx>dy ? dx : -dy)/2, e2;
+
+	for(;;){
+		fill_pixel(img, x0, y0, 10);
+		if (x0==x1 && y0==y1) break;
 		e2 = err;
 		if (e2 >-dx) { err -= dy; x0 += sx; }
 		if (e2 < dy) { err += dx; y0 += sy; }
@@ -201,19 +245,19 @@ void	ft_initpoints(t_point **points, int nb)
 	{
 		while (j < nb)
 		{
-			points[cp] = malloc(sizeof(t_point));
-			points[cp]->x = xo;
-			points[cp]->y = yo;
-			//		ft_putnbr(xo);
-			//		ft_putchar('\n');
-			xo += 20;
-			cp++;
-			j++;
+		points[cp] = malloc(sizeof(t_point));
+		points[cp]->x = xo;
+		points[cp]->y = yo;
+//		ft_putnbr(xo);
+//		ft_putchar('\n');
+		xo += 20;
+		cp++;
+		j++;
 		}
 		j = 0;
 		yo += 20;
-		//		ft_putnbr(yo);
-		//		ft_putchar('\n');
+//		ft_putnbr(yo);
+//		ft_putchar('\n');
 		xo = 20;
 		i++;
 	}
@@ -224,40 +268,79 @@ int main()
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*mlx_image1;
+	void	*mlx_image2;
 	int	*str;
-	int a = 10;
+	int	*str2;
+	int bpp;
+	int sl;
+	int endian;
+	int a = 50;
 
 	mlx_ptr = mlx_init();
 	t_scene *scene;
-	scene = init_scene(WIDTH, HEIGHT, mlx_ptr, "hell world");
+	scene = init_scene(2000, 2000, mlx_ptr, "hell world");
 	scene->img_ptr = mlx_new_image(scene->mlx_ptr, scene->win_width, scene->win_height);
-	str = (int*)mlx_get_data_addr(scene->img_ptr, &scene->bpp, &scene->sl, &scene->endian);
+	str = (int*)mlx_get_data_addr(scene->img_ptr, &bpp, &sl, &endian);
 	scene->str = str;
-	
-	fill_img(scene, 0x00FFFF);
-	int xp;
-	int yp;
-	t_point **points;
-	points = malloc(sizeof(t_point) * a * a);
-	ft_initpoints(points, a);
-	for (int i = 0; i < a * a; i++)
-		{
-			xp = points[i]->x * cos(10) - points[i]->y * sin(10);
-			yp = points[i]->x * sin(10) + points[i]->y * cos(10);
-			points[i]->x = xp;
-			points[i]->y = yp;
-		}
+	fill_img(scene, 11894015);
 
-	int i = -1;
-	while ( ++i < a * a)
+	t_point **points;
+
+	points = malloc(sizeof(t_point) * 10000);
+	t_point *p1;
+	t_point *p2;
+	p1 = malloc(sizeof(t_point));
+	p2 = malloc(sizeof(t_point));
+	p1->x = 430;
+	p1->y = 130;
+	p2->x = 70;
+	p2->y = 700;
+	//points[0] = p1;
+	//points[1] = p2;
+	//points[2] = 0;
+	ft_initpoints(points, a);
+
+	int i = 1;
+	while ( i < a * a)
+	{
 		if (!(i % a == 0))
-			liner(scene->str, points[i - 1], points[i], 0xFFFFFF);
-	i = -1;
-	while ( ++i + a < a * a)
-		liner(scene->str, points[i], points[i + a], 0xFFFFFF);
-	
+			liner(scene->str, points[i - 1], points[i]);
+		i++;
+	}
+	i = 0;
+	while ( i + a < a * a)
+	{
+			liner(scene->str, points[i], points[i + a]);
+		i++;
+	}
+	//liner(scene->str, 100, 100, 100, 500);
+	//liner(scene->str, 100, 100, 500, 100);
+	//liner(scene->str, 100, 500, 500, 500);
+	//liner2(scene->str, 430, 130, 70, 600);
+	//liner(scene->str, 430, 130, 70, 700);
+	ft_putendl("y");
+	//liner(scene->str, p1, p2);
+	//liner(scene->str, points[0], points[1]);
+
+	ft_putendl("y");
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	mlx_key_hook(scene->win_ptr, deal_key, scene);
+
+	/*	
+		mlx_image1 = mlx_new_image(mlx_ptr, WIDTH, HEIGHT);
+		mlx_image2 = mlx_new_image(mlx_ptr, WIDTH, HEIGHT);
+		str = (int*)mlx_get_data_addr(mlx_image1, &bpp, &sl, &endian);
+		str2 = (int*)mlx_get_data_addr(mlx_image2, &bpp, &sl, &endian);
+	//	ft_draw_something(mlx_ptr, mlx_image1, 200, 200, 100);
+	fill_img(str, 11894015);
+	fill_square(str2, 0, 0, 11894015);
+	mlx_put_image_to_window(mlx_ptr, win_ptr, mlx_image1, 0, 0);
+	mlx_put_image_to_window(mlx_ptr, win_ptr, mlx_image2, a, 100);
+
+	//mlx_pixel_put(mlx_ptr, win_ptr, i, j, 255255255);
+
+	mlx_key_hook(win_ptr, deal_key, (void*)0);
+	*/
 	mlx_loop(mlx_ptr);
 	return (0);
 }

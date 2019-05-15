@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/03 14:46:58 by lugibone          #+#    #+#             */
-/*   Updated: 2019/05/03 14:51:30 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/05/15 18:06:45 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ typedef struct	s_scene
 	void	*mlx_ptr;
 	void	*win_ptr;
 	int		*string;
+	int bpp;
+	int sl;
+	int endian;
 }				t_scene;
 
 typedef struct s_point
