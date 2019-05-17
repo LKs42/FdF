@@ -144,7 +144,6 @@ void liner2(int *img, int x0, int y0, int x1, int y1, int color) {
 	}
 }
 
-
 void liner(int *img, t_point *a, t_point *b, int color) {
 	int x0 = a->x;
 	int x1 = b->x;
@@ -166,8 +165,7 @@ void liner(int *img, t_point *a, t_point *b, int color) {
 
 int	deal_key(int key, t_scene *scene)
 {	
-	fill_img(scene, 11894015);
-
+	//fill_img(scene, 11894015);
 	//fill_pixel_point(scene->str, p1, 1000);
 	//line(scene->str, p1, p2, 1000);
 	//fill_square(scene->str, key, key, key);
@@ -237,24 +235,25 @@ int main()
 	fill_img(scene, 0x00FFFF);
 	int xp;
 	int yp;
-	t_point **points;
-	points = malloc(sizeof(t_point) * a * a);
-	ft_initpoints(points, a);
+	//t_point **points;
+	int ag = 45;
+	scene->map = malloc(sizeof(t_point) * a * a);
+	ft_initpoints(scene->map, a);
 	for (int i = 0; i < a * a; i++)
 		{
-			xp = points[i]->x * cos(10) - points[i]->y * sin(10);
-			yp = points[i]->x * sin(10) + points[i]->y * cos(10);
-			points[i]->x = xp;
-			points[i]->y = yp;
+			xp = scene->map[i]->x * cos(ag) - scene->map[i]->y * sin(ag);
+			yp = scene->map[i]->x * sin(ag) + scene->map[i]->y * cos(ag);
+			scene->map[i]->x = xp;
+			scene->map[i]->y = yp;
 		}
 
 	int i = -1;
 	while ( ++i < a * a)
 		if (!(i % a == 0))
-			liner(scene->str, points[i - 1], points[i], 0xFFFFFF);
+			liner(scene->str, scene->map[i - 1], scene->map[i], 0xFFFFFF);
 	i = -1;
 	while ( ++i + a < a * a)
-		liner(scene->str, points[i], points[i + a], 0xFFFFFF);
+		liner(scene->str, scene->map[i], scene->map[i + a], 0xFFFFFF);
 	
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	mlx_key_hook(scene->win_ptr, deal_key, scene);

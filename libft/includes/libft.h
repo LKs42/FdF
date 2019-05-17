@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/05/15 18:08:55 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/05/16 13:49:12 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,14 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
+typedef struct	s_point
+{
+	float x;
+	float y;
+	float z;
+	int color;
+}				t_point;
+
 typedef struct	s_scene
 {
 	void	*mlx_ptr;
@@ -37,15 +45,8 @@ typedef struct	s_scene
 	int 	bpp;
 	int		sl;
 	int		endian;
+	t_point	**map;
 }				t_scene;
-
-typedef struct	s_point
-{
-	float x;
-	float y;
-	float z;
-	int color;
-}				t_point;
 
 size_t				ft_strlen(const char *str);
 int					ft_atoi(const char *str);
