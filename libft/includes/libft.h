@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/05/16 13:49:12 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/06/04 17:35:51 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,6 @@ int					ft_iterative_factorial(int nb);
 char				*ft_str_read(char *str, int fd);
 char				*ft_str_read_line(char *str, int fd);
 int					get_next_line(int const fd, char **line);
+int					ft_check_extension(char *str, char *str2);
 
 #endif

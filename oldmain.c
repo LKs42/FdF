@@ -1,6 +1,5 @@
 #include "mlx.h"
 #include "libft.h"
-#include <fcntl.h>
 #include <unistd.h>
 #include <math.h>
 #define WIDTH 2000 
@@ -154,10 +153,61 @@ void	draw_scene(t_scene *scene, int a)
 		liner(scene->str, scene->map[i], scene->map[i + a], 0xFF0000);
 }
 
+void	rotate_z(t_scene *scene, int ag, int a)
+{
+	float xp;
+	float yp;
+	for (int i = 0; i < a * a; i++)
+		{
+			//xp = scene->map[i]->x + 1000;
+			xp = scene->map[i]->x * cos(ag) - scene->map[i]->y * sin(ag);
+			yp = scene->map[i]->x * sin(ag) + scene->map[i]->y * cos(ag);
+			scene->map[i]->x = xp;
+			scene->map[i]->y = yp;
+		}
+}
+
+void	rotate_y(t_scene *scene, int ag, int a)
+{
+	float xp;
+	float zp;
+	for (int i = 0; i < a * a; i++)
+		{
+			//xp = scene->map[i]->x + 1000;
+			xp = scene->map[i]->x * cos(ag) - scene->map[i]->y * sin(ag);
+			zp = - (scene->map[i]->x) * sin(ag) + scene->map[i]->z * cos(ag);
+			scene->map[i]->x = xp;
+			scene->map[i]->z = zp;
+		}
+}
+
+void	translate_x(t_scene *scene, int a, int dist)
+{
+	for (int i = 0; i < a * a; i++)
+			scene->map[i]->x += dist;
+}
+
+
+void	translate_y(t_scene *scene, int a, int dist)
+{
+	for (int i = 0; i < a * a; i++)
+			scene->map[i]->y += dist;
+}
+
 int	deal_key(int key, t_scene *scene)
 {	
 	if (key == 53)
 		exit(0);
+	if (key == 12)
+		rotate_z(scene, 1, 10);
+	if (key == 124)
+		translate_x(scene, 10, 10);
+	if (key == 123)
+		translate_x(scene, 10, -10);
+	if (key == 125)
+		translate_y(scene, 10, 10);
+	if (key == 126)
+		translate_y(scene, 10, -10);
 	fill_img(scene, 0x181818);
 	draw_scene(scene, 10);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
@@ -207,30 +257,6 @@ void	ft_initpoints(t_point **points, int nb)
 		i++;
 	}
 }
-
-void	ft_line_to_points(char *str, t_point **tab, int y)
-{
-	int x;
-	int i;
-	int j;
-
-	j = 0;
-	x = 0;
-	i = 0;
-	while (str[i] && str[i] != '\n')
-	{
-		while (str[i] && str[i] == ' ')
-			i++;
-		tab[j]->x = x;
-		tab[j]->y = y;
-		tab[j]->z = ft_atoi(str + i);
-		x++;
-		j++;
-		while (str[i] && ft_isdigit(str[i]))
-			i++;
-	}
-}
-
 int main(int argc, char **argv)
 {
 	void	*mlx_ptr;
@@ -238,15 +264,7 @@ int main(int argc, char **argv)
 	void	*mlx_image1;
 	int	*str;
 	int a = 10;
-	int fd;
-	char *file;
-	file = malloc(sizeof(char) * 1000);
-	if (argc == 2)
-	{
-		fd = open(argv[1], O_RDONLY);
-		ft_str_read(file, fd);
-		ft_putendl(file);
-	}
+
 	mlx_ptr = mlx_init();
 	t_scene *scene;
 	scene = init_scene(WIDTH, HEIGHT, mlx_ptr, "hell world");
@@ -254,11 +272,11 @@ int main(int argc, char **argv)
 	str = (int*)mlx_get_data_addr(scene->img_ptr, &scene->bpp, &scene->sl, &scene->endian);
 	scene->str = str;
 	fill_img(scene, 0x181818);
-	/*
-	   t_point **tab;
-	   tab = malloc(sizeof(t_point) * 1000);
-	   ft_line_to_points(file, tab, 0);
-	   */
+
+	int ag = 0;
+	if (argc == 2)
+		ag = atoi(argv[1]);
+
 	scene->map = malloc(sizeof(t_point) * a * a);
 	ft_initpoints(scene->map, a);
 

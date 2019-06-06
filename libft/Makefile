@@ -6,7 +6,7 @@
 #    By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/02 15:19:01 by lugibone          #+#    #+#              #
-#    Updated: 2019/04/26 15:01:18 by lugibone         ###   ########.fr        #
+#    Updated: 2019/06/04 17:13:12 by lugibone         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -113,6 +113,7 @@ SRC_NAME = ft_atoi.c\
 	ft_toupper.c\
 	get_next_line.c\
 	ft_str_read.c\
+	ft_check_extension.c\
 	ft_str_read_line.c
 AR = ar rc
 OBJ_NAME = $(SRC_NAME:.c=.o)

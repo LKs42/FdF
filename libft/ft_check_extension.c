@@ -1,35 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_check_extension.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/03 14:46:58 by lugibone          #+#    #+#             */
-/*   Updated: 2019/05/29 13:43:10 by lugibone         ###   ########.fr       */
+/*   Created: 2019/06/04 17:10:27 by lugibone          #+#    #+#             */
+/*   Updated: 2019/06/04 17:11:52 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
-# define FDF_H
+#include "libft.h"
 
-# include "libft.h"
-
-typedef struct	s_scene
+int		ft_check_extension(char *str, char *str2)
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	int		*string;
-	int bpp;
-	int sl;
-	int endian;
-	int map_w;
-	int map_h;
-}				t_scene;
+	int i;
+	int strlen;
 
-typedef struct s_point
-{
-	int x;
-	int y;
-	int z;
-}				t_point;
+	i = 0;
+	strlen = ft_strlen(str);
+	i = strlen - 1;
+	while (i >= 0)
+	{
+		if (str[i] == '.')
+		{
+			if (ft_strcmp(str + i, str2) == 0)
+				return (1);
+			else
+				return (0);
+		}
+		i--;
+	}
+	return (0);
+}
