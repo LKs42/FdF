@@ -7,6 +7,30 @@
 #define HEIGHT 2000
 #define ABS(N) ((N<0)?(-N):(N))
 
+typedef union u_mat4
+{
+	struct s_mat4_data
+	{
+		float m00;
+		float m01;
+		float m02;
+		float m03;
+		float m10;
+		float m11;
+		float m12;
+		float m13;
+		float m20;
+		float m21;
+		float m22;
+		float m23;
+		float m30;
+		float m31;
+		float m32;
+		float m33;
+	}		d;
+	float m[4][4];
+}		t_mat4;
+
 void fill_pixel_point(int *my_image_string, t_point *p, int color)
 {
 	int i;
@@ -34,6 +58,29 @@ void fill_pixel_3d(int *my_image_string, int x, int y, int z, int color)
 float	lerp(float start, float end, float t)
 {
 	return (start + t * (end-start));
+}
+
+void	ft_rotation_matrix(t_point *point, float angle, t_point *new_point)
+{
+	float focale;
+
+	focale = 1;
+	new_point->x = (focale * point->x)/point->z;
+	new_point->y = (focale * point->y)/point->z;
+}
+
+t_point	*ft_rot_matrix(t_point *point, t_scene *scene)
+{
+	float focale;
+	t_point *new_point;
+
+	new_point = malloc(sizeof(t_point));
+	focale = scene->focale;
+	
+	new_point->x = (focale * point->x)/point->z;
+	new_point->y = (focale * point->y)/point->z;
+
+	return (new_point);
 }
 
 void	fill_square(int *img, int x, int y, int color)
@@ -148,16 +195,22 @@ void	draw_scene(t_scene *scene, int a)
 	i = -1;
 	while (++i < a * a)
 		if (!(i % a == 0))
-			liner(scene->str, scene->map[i - 1], scene->map[i], 0x00FF00);
+			liner(scene->str, ft_rot_matrix(scene->map[i - 1], scene), ft_rot_matrix(scene->map[i], scene), 0x00FF00);
 	i = -1;
 	while (++i + a < a * a)
-		liner(scene->str, scene->map[i], scene->map[i + a], 0xFF0000);
+		liner(scene->str, ft_rot_matrix(scene->map[i], scene), ft_rot_matrix(scene->map[i + a], scene), 0xFF0000);
 }
 
 int	deal_key(int key, t_scene *scene)
 {	
 	if (key == 53)
 		exit(0);
+	if (key == 32)
+		exit(0);
+	if (key == 65362)
+		scene->focale++;
+	if (key == 65364)
+		scene->focale--;
 	fill_img(scene, 0x181818);
 	draw_scene(scene, 10);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
@@ -176,6 +229,7 @@ t_scene	*init_scene(int w, int h, void *mlx, char *str)
 	scene->mlx_ptr = mlx;
 	scene->title = str;
 	scene->win_ptr = mlx_new_window(scene->mlx_ptr, w, h, str);
+	scene->focale = 100;
 	return (scene);
 }
 
@@ -187,7 +241,7 @@ void	ft_initpoints(t_point **points, int nb)
 	int space = 50;
 	int xo = space;
 	int yo = space;
-	int zo = 10;
+	int zo = 50;
 	while (i < nb)
 	{
 		while (j < nb)
@@ -197,7 +251,7 @@ void	ft_initpoints(t_point **points, int nb)
 			points[cp]->y = yo;
 			points[cp]->z = zo;
 			xo += space;
-			zo+= 10;
+			zo += 0;
 			cp++;
 			j++;
 		}
@@ -231,6 +285,33 @@ void	ft_line_to_points(char *str, t_point **tab, int y)
 	}
 }
 
+t_point	**ft_file_to_points(char *str)
+{
+	int i;
+	int nb_espaces;
+	int nb_lignes;
+	t_point **points;
+	i = 0;
+	nb_espaces = 0;
+	nb_lignes = 0;
+	while(str[i])
+	{
+		if (str[i] == ' ')
+			nb_espaces++;
+		if (str[i] == '\n')
+			nb_lignes++;
+		i++;
+	}
+	points = malloc(sizeof(t_point) * (nb_espaces + nb_lignes + 1));
+	i = 0;
+	while(str[i])
+	{
+		if (ft_isdigit(str[i]))
+		i++;
+	}
+	return (points);
+}
+
 int main(int argc, char **argv)
 {
 	void	*mlx_ptr;
@@ -247,6 +328,7 @@ int main(int argc, char **argv)
 		ft_str_read(file, fd);
 		ft_putendl(file);
 	}
+	
 	mlx_ptr = mlx_init();
 	t_scene *scene;
 	scene = init_scene(WIDTH, HEIGHT, mlx_ptr, "hell world");
@@ -263,7 +345,7 @@ int main(int argc, char **argv)
 	ft_initpoints(scene->map, a);
 
 	draw_scene(scene, a);
-
+	
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	mlx_key_hook(scene->win_ptr, deal_key, scene);
 	mlx_loop(mlx_ptr);

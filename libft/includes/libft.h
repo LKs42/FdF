@@ -45,6 +45,7 @@ typedef struct	s_scene
 	int 	bpp;
 	int		sl;
 	int		endian;
+	float		focale;
 	t_point	**map;
 }				t_scene;
 
