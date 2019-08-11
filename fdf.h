@@ -25,6 +25,9 @@ typedef struct	s_scene
 	int endian;
 	int map_w;
 	int map_h;
+	float rot_x;
+	float rot_y;
+	float rot_z;
 }				t_scene;
 
 typedef struct s_point

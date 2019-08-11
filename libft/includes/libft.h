@@ -17,6 +17,7 @@
 # include <string.h>
 # include <sys/types.h>
 # include <sys/uio.h>
+# include <math.h>
 
 typedef struct		s_list
 {
@@ -47,6 +48,9 @@ typedef struct	s_scene
 	int		endian;
 	float		focale;
 	t_point	**map;
+	float	rot_x;
+	float	rot_y;
+	float	rot_z;
 }				t_scene;
 
 size_t				ft_strlen(const char *str);

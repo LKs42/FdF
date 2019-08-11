@@ -1,8 +1,8 @@
-#include "mlx.h"
-#include "libft.h"
-#include <fcntl.h>
 #include <unistd.h>
 #include <math.h>
+#include "libft.h"
+#include "mlx.h"
+#include <fcntl.h>
 #define WIDTH 2000 
 #define HEIGHT 2000
 #define ABS(N) ((N<0)?(-N):(N))
@@ -69,16 +69,63 @@ void	ft_rotation_matrix(t_point *point, float angle, t_point *new_point)
 	new_point->y = (focale * point->y)/point->z;
 }
 
+t_point *ft_rot_x(t_point *point, t_scene *scene, t_point *new_point)
+{
+	float ag;
+
+	ag = scene->rot_x;
+
+	new_point->x = point->x;
+	new_point->y = point->y * cos(ag) - point->z * sin(ag);
+	new_point->z = point->y * sin(ag) + point->z * cos(ag);
+
+	return (new_point);
+}
+
+
+t_point *ft_rot_y(t_point *point, t_scene *scene, t_point *new_point)
+{
+	float ag;
+
+	ag = scene->rot_y;
+
+	new_point->x = point->x * cos(ag) + point->z * sin(ag);
+	new_point->y = point->y;
+	new_point->z = -(point->x) * sin(ag) + point->z * cos(ag);
+
+	return (new_point);
+}
+
+
+t_point *ft_rot_z(t_point *point, t_scene *scene, t_point *new_point)
+{
+	float ag;
+
+	ag = scene->rot_z;
+
+	new_point->x = point->x * cos(ag) - point->y * sin(ag);
+	new_point->y = point->x * sin(ag) + point->y * cos(ag);
+	new_point->z = point->z;
+
+	return (new_point);
+}
+
 t_point	*ft_rot_matrix(t_point *point, t_scene *scene)
 {
 	float focale;
 	t_point *new_point;
+	float ag;
 
+	ag = scene->rot_y;;
 	new_point = malloc(sizeof(t_point));
 	focale = scene->focale;
-	
-	new_point->x = (focale * point->x)/point->z;
-	new_point->y = (focale * point->y)/point->z;
+
+	ft_rot_x(point, scene, new_point);
+	ft_rot_y(new_point, scene, new_point);
+	ft_rot_z(new_point, scene, new_point);
+
+	new_point->x = (focale * new_point->x)/point->z;
+	new_point->y = (focale * new_point->y)/point->z;
 
 	return (new_point);
 }
@@ -188,6 +235,37 @@ void liner(int *img, t_point *a, t_point *b, int color) {
 	}
 }
 
+void liner3(int *img, t_point *a, t_point *b, int color) {
+	int dx;
+	int dy; 
+	int sx;
+	int sy;
+	int err;
+	int e2;
+	
+	dx = abs((b->x) - (a->x));
+       	sx = (a->x) < (b->x) ? 1 : -1;
+	dy = abs((b->y) - (a->y));
+	sy = (a->y) < (b->y) ? 1 : -1; 
+	err = (dx > dy ? dx : -dy) /2;
+
+	while (!((a->x) == (b->x) && (a->y) == (b->y)))
+	{
+		fill_pixel(img, (a->x), (a->y), color);
+		e2 = err;
+		if (e2 >-dx)
+		{
+			err -= dy;
+			(a->x) += sx;
+		}
+		if (e2 < dy)
+		{
+			err += dx;
+			(a->y) += sy;
+		}
+	}
+}
+
 void	draw_scene(t_scene *scene, int a)
 {
 	int i;
@@ -207,6 +285,24 @@ int	deal_key(int key, t_scene *scene)
 		exit(0);
 	if (key == 32)
 		exit(0);
+	if (key == 97)
+		scene->rot_x += 0.04;
+	if (key == 122)
+		scene->rot_x -= 0.04;
+	if (key == 101)
+		scene->rot_x = 0;
+	if (key == 114)
+		scene->rot_y += 0.04;
+	if (key == 116)
+		scene->rot_y -= 0.04;
+	if (key == 121)
+		scene->rot_y = 0;
+	if (key == 117)
+		scene->rot_z += 0.04;
+	if (key == 105)
+		scene->rot_z -= 0.04;
+	if (key == 111)
+		scene->rot_z = 0;
 	if (key == 65362)
 		scene->focale++;
 	if (key == 65364)
@@ -230,6 +326,9 @@ t_scene	*init_scene(int w, int h, void *mlx, char *str)
 	scene->title = str;
 	scene->win_ptr = mlx_new_window(scene->mlx_ptr, w, h, str);
 	scene->focale = 100;
+	scene->rot_x = 0;
+	scene->rot_y = 0;
+	scene->rot_z = 0;
 	return (scene);
 }
 
@@ -287,28 +386,25 @@ void	ft_line_to_points(char *str, t_point **tab, int y)
 
 t_point	**ft_file_to_points(char *str)
 {
-	int i;
-	int nb_espaces;
-	int nb_lignes;
 	t_point **points;
+	int i;
+	int j;
+	int nbline;
+	char **line;
+
 	i = 0;
-	nb_espaces = 0;
-	nb_lignes = 0;
-	while(str[i])
+	j = 0;
+	nbline = 0;
+	line = ft_split_char(str, ' ');
+	while (line[i][0])
 	{
-		if (str[i] == ' ')
-			nb_espaces++;
-		if (str[i] == '\n')
-			nb_lignes++;
-		i++;
+		if (line[i][0] == '\n')
+		nbline++;
+		else
+			i++;
 	}
-	points = malloc(sizeof(t_point) * (nb_espaces + nb_lignes + 1));
-	i = 0;
-	while(str[i])
-	{
-		if (ft_isdigit(str[i]))
-		i++;
-	}
+	ft_putnbr(i);
+	points = malloc(sizeof(t_point) * i);
 	return (points);
 }
 
