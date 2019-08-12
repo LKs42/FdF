@@ -283,7 +283,7 @@ int	deal_key(int key, t_scene *scene)
 {	
 	if (key == 53)
 		exit(0);
-	if (key == 32)
+	if (key == 49)
 		exit(0);
 	if (key == 97)
 		scene->rot_x += 0.04;
@@ -383,7 +383,7 @@ void	ft_line_to_points(char *str, t_point **tab, int y)
 			i++;
 	}
 }
-
+/*
 t_point	**ft_file_to_points(char *str)
 {
 	t_point **points;
@@ -402,12 +402,60 @@ t_point	**ft_file_to_points(char *str)
 		nbline++;
 		else
 			i++;
+	int i;
+	int j;
+	int curr_line;
+	int curr_col;
+	int nb_lignes;
+	t_point **points;
+	char	**text;
+	
+	curr_col = 0;
+	curr_line = 0;
+	nb_lignes = 0;
+	i = 0;
+	j = 0;
+	text = ft_strsplit(str, ' ');
+	while (text[nb_lignes])
+		nb_lignes++;
+	points = malloc(sizeof(t_point) * nb_lignes);
+	*points = malloc(sizeof(t_point) * nb_lignes);
+	while (text[i])
+	{
+		ft_putnbr(i);
+		ft_putchar(' ');
+		ft_putnbr(j);
+		ft_putchar('\n');
+		while(text[i][j])
+		{
+			ft_putstr("text ij: ");
+			ft_putstr(text[i]);
+			ft_putchar('\n');
+			ft_putstr("currline currcol: ");
+			ft_putnbr(curr_line);
+			ft_putchar(' ');
+			ft_putnbr(curr_col);
+			ft_putchar('\n');
+
+			points[curr_line] = malloc(sizeof(t_point));
+			(points[curr_line][curr_col]).z = (float)atoi(text[i]);
+			curr_col++;
+			if (text[i][j] == '\n')
+			{
+				curr_line++;
+				curr_col = 0;
+			}
+			j++;
+		}
+		curr_col = 0;
+		j = 0;
+		i++;
 	}
 	ft_putnbr(i);
 	points = malloc(sizeof(t_point) * i);
 	return (points);
 }
-
+*/
 int main(int argc, char **argv)
 {
 	void	*mlx_ptr;
@@ -423,6 +471,7 @@ int main(int argc, char **argv)
 		fd = open(argv[1], O_RDONLY);
 		ft_str_read(file, fd);
 		ft_putendl(file);
+		//ft_file_to_points(file);
 	}
 	
 	mlx_ptr = mlx_init();
