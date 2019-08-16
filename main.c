@@ -117,15 +117,15 @@ t_point	*ft_rot_matrix(t_point *point, t_scene *scene)
 	float ag;
 
 	ag = scene->rot_y;;
-	new_point = malloc(sizeof(t_point));
+	new_point = malloc(sizeof(t_point) * 5);
 	focale = scene->focale;
 
 	ft_rot_x(point, scene, new_point);
 	ft_rot_y(new_point, scene, new_point);
 	ft_rot_z(new_point, scene, new_point);
 
-	new_point->x = (focale * new_point->x)/point->z;
-	new_point->y = (focale * new_point->y)/point->z;
+//	new_point->x = (focale * new_point->x)/point->z;
+//	new_point->y = (focale * new_point->y)/point->z;
 
 	return (new_point);
 }
@@ -243,9 +243,9 @@ void liner3(int *img, t_point *a, t_point *b, int color) {
 	int err;
 	int e2;
 	
-	dx = abs((b->x) - (a->x));
+	dx = fabs((b->x) - (a->x));
        	sx = (a->x) < (b->x) ? 1 : -1;
-	dy = abs((b->y) - (a->y));
+	dy = fabs((b->y) - (a->y));
 	sy = (a->y) < (b->y) ? 1 : -1; 
 	err = (dx > dy ? dx : -dy) /2;
 
@@ -273,10 +273,10 @@ void	draw_scene(t_scene *scene, int a)
 	i = -1;
 	while (++i < a * a)
 		if (!(i % a == 0))
-			liner(scene->str, ft_rot_matrix(scene->map[i - 1], scene), ft_rot_matrix(scene->map[i], scene), 0x00FF00);
+			liner(scene->str, ft_rot_matrix(scene->map[i - 1], scene), ft_rot_matrix(scene->map[i], scene), 0x00FF00 + i * 2);
 	i = -1;
 	while (++i + a < a * a)
-		liner(scene->str, ft_rot_matrix(scene->map[i], scene), ft_rot_matrix(scene->map[i + a], scene), 0xFF0000);
+		liner(scene->str, ft_rot_matrix(scene->map[i], scene), ft_rot_matrix(scene->map[i + a], scene), 0xFF0000 + i * 2);
 }
 
 int	deal_key(int key, t_scene *scene)
@@ -285,27 +285,27 @@ int	deal_key(int key, t_scene *scene)
 		exit(0);
 	if (key == 49)
 		exit(0);
-	if (key == 97)
+	if (key == 12)
 		scene->rot_x += 0.04;
-	if (key == 122)
+	if (key == 13)
 		scene->rot_x -= 0.04;
-	if (key == 101)
+	if (key == 14)
 		scene->rot_x = 0;
-	if (key == 114)
+	if (key == 15)
 		scene->rot_y += 0.04;
-	if (key == 116)
+	if (key == 16)
 		scene->rot_y -= 0.04;
-	if (key == 121)
+	if (key == 17)
 		scene->rot_y = 0;
-	if (key == 117)
+	if (key == 32)
 		scene->rot_z += 0.04;
-	if (key == 105)
+	if (key == 34)
 		scene->rot_z -= 0.04;
-	if (key == 111)
+	if (key == 31)
 		scene->rot_z = 0;
-	if (key == 65362)
+	if (key == 126)
 		scene->focale++;
-	if (key == 65364)
+	if (key == 125)
 		scene->focale--;
 	fill_img(scene, 0x181818);
 	draw_scene(scene, 10);
@@ -319,7 +319,7 @@ t_scene	*init_scene(int w, int h, void *mlx, char *str)
 {
 	t_scene *scene;
 
-	scene = malloc(sizeof(t_scene));
+	scene = malloc(sizeof(t_scene) * 5);
 	scene->win_height = h;
 	scene->win_width = w;
 	scene->mlx_ptr = mlx;
@@ -345,10 +345,19 @@ void	ft_initpoints(t_point **points, int nb)
 	{
 		while (j < nb)
 		{
-			points[cp] = malloc(sizeof(t_point));
+			points[cp] = malloc(sizeof(t_point) * 5);
 			points[cp]->x = xo;
 			points[cp]->y = yo;
-			points[cp]->z = zo;
+			if ( i == 4 && j == 5)
+				points[cp]->z = zo + 75;
+			else if ( i == 5 && j == 4)
+				points[cp]->z = zo + 100;
+			else if ( i == 4 && j == 4)
+				points[cp]->z = zo + 125;
+			else if ( i == 5 && j == 5)
+				points[cp]->z = zo + 100;
+			else
+				points[cp]->z = zo;
 			xo += space;
 			zo += 0;
 			cp++;
@@ -383,25 +392,9 @@ void	ft_line_to_points(char *str, t_point **tab, int y)
 			i++;
 	}
 }
-/*
+
 t_point	**ft_file_to_points(char *str)
 {
-	t_point **points;
-	int i;
-	int j;
-	int nbline;
-	char **line;
-
-	i = 0;
-	j = 0;
-	nbline = 0;
-	line = ft_split_char(str, ' ');
-	while (line[i][0])
-	{
-		if (line[i][0] == '\n')
-		nbline++;
-		else
-			i++;
 	int i;
 	int j;
 	int curr_line;
@@ -418,27 +411,17 @@ t_point	**ft_file_to_points(char *str)
 	text = ft_strsplit(str, ' ');
 	while (text[nb_lignes])
 		nb_lignes++;
-	points = malloc(sizeof(t_point) * nb_lignes);
-	*points = malloc(sizeof(t_point) * nb_lignes);
+	points = malloc(sizeof(t_point) * nb_lignes + 1 * 5);
+	*points = malloc(sizeof(t_point) * nb_lignes + 1 * 5);
 	while (text[i])
 	{
-		ft_putnbr(i);
-		ft_putchar(' ');
-		ft_putnbr(j);
-		ft_putchar('\n');
 		while(text[i][j])
 		{
-			ft_putstr("text ij: ");
-			ft_putstr(text[i]);
-			ft_putchar('\n');
-			ft_putstr("currline currcol: ");
-			ft_putnbr(curr_line);
-			ft_putchar(' ');
-			ft_putnbr(curr_col);
-			ft_putchar('\n');
-
-			points[curr_line] = malloc(sizeof(t_point));
-			(points[curr_line][curr_col]).z = (float)atoi(text[i]);
+			points[curr_line] = malloc(sizeof(t_point) + 1 * 5);
+			(points[curr_line][curr_col]).x = curr_col;
+			(points[curr_line][curr_col]).y = curr_line;
+			(points[curr_line][curr_col]).z = atof(text[i]);
+			(points[curr_line][curr_col]).color = 0xFF00FF;
 			curr_col++;
 			if (text[i][j] == '\n')
 			{
@@ -451,11 +434,9 @@ t_point	**ft_file_to_points(char *str)
 		j = 0;
 		i++;
 	}
-	ft_putnbr(i);
-	points = malloc(sizeof(t_point) * i);
 	return (points);
 }
-*/
+
 int main(int argc, char **argv)
 {
 	void	*mlx_ptr;
@@ -471,7 +452,6 @@ int main(int argc, char **argv)
 		fd = open(argv[1], O_RDONLY);
 		ft_str_read(file, fd);
 		ft_putendl(file);
-		//ft_file_to_points(file);
 	}
 	
 	mlx_ptr = mlx_init();
@@ -486,8 +466,10 @@ int main(int argc, char **argv)
 	   tab = malloc(sizeof(t_point) * 1000);
 	   ft_line_to_points(file, tab, 0);
 	   */
-	scene->map = malloc(sizeof(t_point) * a * a);
+	scene->map = malloc(sizeof(t_point) * a * a * 5);
 	ft_initpoints(scene->map, a);
+//	if(argc == 2)
+//	scene->map = ft_file_to_points(file);
 
 	draw_scene(scene, a);
 	

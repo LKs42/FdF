@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/06/04 17:35:51 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/08/13 17:52:29 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ typedef struct	s_scene
 	int		*str;
 	int 	win_width;
 	int		win_height;
+	int		file_w;
+	int		file_h;
 	int 	bpp;
 	int		sl;
 	int		endian;
