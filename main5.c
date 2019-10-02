@@ -100,6 +100,7 @@ t_point	*ft_rot_matrix(t_point *point, t_scene *scene)
 	ft_rot_y(new_point, scene, new_point);
 	ft_rot_z(new_point, scene, new_point);
 	
+	free(point);
 //	new_point->x = (focale * new_point->x)/point->z;
 //	new_point->y = (focale * new_point->y)/point->z;
 
@@ -220,7 +221,7 @@ void liner3(int *img, t_point *a, t_point *b, int color) {
 	int e2;
 	
 	dx = fabs((b->x) - (a->x));
-	sx = (a->x) < (b->x) ? 1 : -1;
+       	sx = (a->x) < (b->x) ? 1 : -1;
 	dy = fabs((b->y) - (a->y));
 	sy = (a->y) < (b->y) ? 1 : -1; 
 	err = (dx > dy ? dx : -dy) /2;
@@ -429,6 +430,7 @@ int main(int argc, char **argv)
 		ft_str_read(file, fd);
 		ft_putendl(file);
 	}
+	
 	mlx_ptr = mlx_init();
 	t_scene *scene;
 	scene = init_scene(WIDTH, HEIGHT, mlx_ptr, "hell world");
@@ -443,6 +445,8 @@ int main(int argc, char **argv)
 	   */
 	scene->map = malloc(sizeof(t_point) * a * a * 5);
 	ft_initpoints(scene->map, a);
+//	if(argc == 2)
+//	scene->map = ft_file_to_points(file);
 
 	draw_scene(scene, a);
 	
