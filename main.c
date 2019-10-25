@@ -7,14 +7,6 @@
 #define HEIGHT 2000
 #define ABS(N) ((N<0)?(-N):(N))
 
-void fill_pixel_point(int *my_image_string, t_point *p, int color)
-{
-	int i;
-
-	i = p->x + WIDTH*p->y;
-	my_image_string[i] = color;
-}
-
 void fill_pixel(int *my_image_string, int x, int y, int color)
 {
 	int i;
@@ -23,38 +15,15 @@ void fill_pixel(int *my_image_string, int x, int y, int color)
 	my_image_string[i] = color;
 }
 
-void fill_pixel_3d(int *my_image_string, int x, int y, int z, int color)
-{
-	int i;
-
-	i = x + WIDTH*y + WIDTH * HEIGHT * z;
-	my_image_string[i] = color;
-}
-
-float	lerp(float start, float end, float t)
-{
-	return (start + t * (end-start));
-}
-
-void	ft_rotation_matrix(t_point *point, float angle, t_point *new_point)
-{
-	float focale;
-
-	focale = 1;
-	new_point->x = (focale * point->x)/point->z;
-	new_point->y = (focale * point->y)/point->z;
-}
-
 t_point *ft_rot_x(t_point *point, t_scene *scene, t_point *new_point)
 {
 	float ag;
 
 	ag = scene->rot_x;
 
-	new_point->x = point->x;
-	new_point->y = point->y * cos(ag) - point->z * sin(ag);
-	new_point->z = point->y * sin(ag) + point->z * cos(ag);
-
+	new_point->x = point->x + 5;
+	new_point->y = point->y * cos(ag) - point->z * sin(ag) + 5;
+	new_point->z = point->y * sin(ag) + point->z * cos(ag) + 5;
 	return (new_point);
 }
 
@@ -106,23 +75,6 @@ t_point	*ft_rot_matrix(t_point *point, t_scene *scene)
 	return (new_point);
 }
 
-void	fill_square(int *img, int x, int y, int color)
-{
-	int i = 0;
-	int j = 0;
-	int size = 200;
-	while (i < size)
-	{
-		while (j < size)
-		{
-			fill_pixel(img, x + i, y + j, color);
-			j++;
-		}
-		i++;
-		j = 0;
-	}
-}
-
 void	fill_img(t_scene *param, int color)
 {
 	int i;
@@ -134,61 +86,6 @@ void	fill_img(t_scene *param, int color)
 	{
 		param->str[i] = c;
 		i++;
-	}
-}
-
-float	ft_fmax(float a, float b)
-{
-	if (a >= b)
-		return (a);
-	return (b);
-}
-
-int	roundNo(float n)
-{
-	return (n < 0 ? n -0.5 : n + 0.5);
-}
-
-t_point	*round_point(t_point *p0)
-{
-	t_point *res;
-	res = malloc(sizeof(t_point));
-	res->x = roundNo(res->x);
-	res->y = roundNo(res->y);
-	return (res);
-}
-
-t_point	*lerp_point(t_point *a, t_point *b, float t)
-{
-	t_point *res;
-
-	res = malloc(sizeof(t_point));
-	res->x = lerp(a->x, b->x, t);
-	res->y = lerp(a->y, b->y, t);
-	return (res);
-}
-
-float	diagonal_dist(float ax, float ay, float bx, float by)
-{
-	float dx;
-	float dy;
-
-	dy = by - ay;
-	dx = bx - ax;
-	return (ft_fmax(ABS(dx), ABS(dy)));
-}
-
-void liner2(int *img, int x0, int y0, int x1, int y1, int color) {
-	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
-	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
-	int err = (dx>dy ? dx : -dy)/2, e2;
-
-	while(!(x0==x1 && y0==y1))
-	{
-		fill_pixel(img, x0, y0, color);
-		e2 = err;
-		if (e2 >-dx) { err -= dy; x0 += sx; }
-		if (e2 < dy) { err += dx; y0 += sy; }
 	}
 }
 
@@ -211,41 +108,10 @@ void liner(int *img, t_point *a, t_point *b, int color) {
 	}
 }
 
-void liner3(int *img, t_point *a, t_point *b, int color) {
-	int dx;
-	int dy; 
-	int sx;
-	int sy;
-	int err;
-	int e2;
-	
-	dx = fabs((b->x) - (a->x));
-	sx = (a->x) < (b->x) ? 1 : -1;
-	dy = fabs((b->y) - (a->y));
-	sy = (a->y) < (b->y) ? 1 : -1; 
-	err = (dx > dy ? dx : -dy) /2;
-
-	while (!((a->x) == (b->x) && (a->y) == (b->y)))
-	{
-		fill_pixel(img, (a->x), (a->y), color);
-		e2 = err;
-		if (e2 >-dx)
-		{
-			err -= dy;
-			(a->x) += sx;
-		}
-		if (e2 < dy)
-		{
-			err += dx;
-			(a->y) += sy;
-		}
-	}
-}
-
 void	draw_scene(t_scene *scene, int a)
 {
 	int i;
-
+	
 	i = -1;
 	while (++i < a * a)
 		if (!(i % a == 0))
@@ -298,6 +164,8 @@ t_scene	*init_scene(int w, int h, void *mlx, char *str)
 	scene = malloc(sizeof(t_scene) * 5);
 	scene->win_height = h;
 	scene->win_width = w;
+	scene->map_h = 0;
+	scene->map_w = 0;
 	scene->mlx_ptr = mlx;
 	scene->title = str;
 	scene->win_ptr = mlx_new_window(scene->mlx_ptr, w, h, str);
@@ -346,73 +214,6 @@ void	ft_initpoints(t_point **points, int nb)
 	}
 }
 
-void	ft_line_to_points(char *str, t_point **tab, int y)
-{
-	int x;
-	int i;
-	int j;
-
-	j = 0;
-	x = 0;
-	i = 0;
-	while (str[i] && str[i] != '\n')
-	{
-		while (str[i] && str[i] == ' ')
-			i++;
-		tab[j]->x = x;
-		tab[j]->y = y;
-		tab[j]->z = ft_atoi(str + i);
-		x++;
-		j++;
-		while (str[i] && ft_isdigit(str[i]))
-			i++;
-	}
-}
-
-t_point	**ft_file_to_points(char *str)
-{
-	int i;
-	int j;
-	int curr_line;
-	int curr_col;
-	int nb_lignes;
-	t_point **points;
-	char	**text;
-	
-	curr_col = 0;
-	curr_line = 0;
-	nb_lignes = 0;
-	i = 0;
-	j = 0;
-	text = ft_strsplit(str, ' ');
-	while (text[nb_lignes])
-		nb_lignes++;
-	points = malloc(sizeof(t_point) * nb_lignes + 1 * 5);
-	*points = malloc(sizeof(t_point) * nb_lignes + 1 * 5);
-	while (text[i])
-	{
-		while(text[i][j])
-		{
-			points[curr_line] = malloc(sizeof(t_point) + 1 * 5);
-			(points[curr_line][curr_col]).x = curr_col;
-			(points[curr_line][curr_col]).y = curr_line;
-			(points[curr_line][curr_col]).z = atof(text[i]);
-			(points[curr_line][curr_col]).color = 0xFF00FF;
-			curr_col++;
-			if (text[i][j] == '\n')
-			{
-				curr_line++;
-				curr_col = 0;
-			}
-			j++;
-		}
-		curr_col = 0;
-		j = 0;
-		i++;
-	}
-	return (points);
-}
-
 int main(int argc, char **argv)
 {
 	void	*mlx_ptr;
@@ -436,18 +237,27 @@ int main(int argc, char **argv)
 	str = (int*)mlx_get_data_addr(scene->img_ptr, &scene->bpp, &scene->sl, &scene->endian);
 	scene->str = str;
 	fill_img(scene, 0x181818);
-	/*
-	   t_point **tab;
-	   tab = malloc(sizeof(t_point) * 1000);
-	   ft_line_to_points(file, tab, 0);
-	   */
-	scene->map = malloc(sizeof(t_point) * a * a * 5);
+
+	scene->map = malloc(sizeof(t_point) * a * a );
 	ft_initpoints(scene->map, a);
 
 	draw_scene(scene, a);
-	
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	mlx_key_hook(scene->win_ptr, deal_key, scene);
 	mlx_loop(mlx_ptr);
 	return (0);
 }
+
+/*
+while(running) {
+    deltaTime = CurrentTime()-OldTime;
+    oldTime = CurrentTime();
+    accumulator += deltaTime;
+    while(accumulator > 1.0/60.0){
+        update();
+        accumulator -= 1.0/60.0;
+    }
+    render();
+    display();
+}
+*/
