@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/25 17:39:50 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/25 17:45:26 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,19 @@
 #define TITLE "hell world"
 #define ABS(N) ((N<0)?(-N):(N))
 
-t_point	*loop(char **curr_line, int y, int size)
+void	loop(char **curr_line, t_point **line, int y, int size)
 {
-	t_point *line;
 	int x;
 
-	line = malloc(sizeof(t_point *) * size);
 	x = 0;
 	while (curr_line[x] && curr_line[x][0] != '\0')
 	{
+		line[x] = malloc(sizeof(t_point *) * size);
 		line[x].x = (float)x;
 		line[x].y = (float)y;
 		line[x].z = (float)ft_atoi(curr_line[x]);
 		x++;
 	}
-	return (line);
 }
 	
 t_point	**fileread(int fd)
@@ -52,7 +50,7 @@ t_point	**fileread(int fd)
 	{
 		ft_str_read_line(str, fd);
 		curr_line = ft_split(str, " \n");
-		map[y] = loop(curr_line, y, ft_strlen(str));
+		loop(curr_line, map, y, ft_strlen(str));
 		y++;
 	}
 	map[y] = NULL;
