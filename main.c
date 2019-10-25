@@ -145,11 +145,15 @@ int	deal_key(int key, t_scene *scene)
 		scene->rot_z -= 0.04;
 	if (key == 31)
 		scene->rot_z = 0;
+	if (key == 6)
+		scene->bg_color -= 10;
+	if (key == 7)
+		scene->bg_color += 10;
 	if (key == 126)
 		scene->focale++;
 	if (key == 125)
 		scene->focale--;
-	fill_img(scene, 0x181818);
+	fill_img(scene, scene->bg_color);
 	draw_scene(scene, 10);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	ft_putstr("\n");
@@ -173,6 +177,7 @@ t_scene	*init_scene(int w, int h, void *mlx, char *str)
 	scene->rot_x = 0;
 	scene->rot_y = 0;
 	scene->rot_z = 0;
+	scene->bg_color = 0x181818;
 	return (scene);
 }
 
@@ -236,7 +241,7 @@ int main(int argc, char **argv)
 	scene->img_ptr = mlx_new_image(scene->mlx_ptr, scene->win_width, scene->win_height);
 	str = (int*)mlx_get_data_addr(scene->img_ptr, &scene->bpp, &scene->sl, &scene->endian);
 	scene->str = str;
-	fill_img(scene, 0x181818);
+	fill_img(scene, scene->bg_color);
 
 	scene->map = malloc(sizeof(t_point) * a * a );
 	ft_initpoints(scene->map, a);
