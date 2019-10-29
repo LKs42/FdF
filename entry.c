@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/29 16:53:32 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/29 16:58:22 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,8 @@ t_point	***fileread(int fd)
 			a++;
 		map[y] = malloc(sizeof(t_point**) * a);
 		loop(curr_line, map, y);
-		ft_putnbr(y);
-		ft_putchar(' ');
 		y++;
 	}
-	ft_putchar('\n');
 	map[y] = NULL;
 	return (map);
 }
