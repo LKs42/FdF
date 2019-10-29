@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/25 18:14:03 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/29 16:53:32 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,41 +20,51 @@
 #define TITLE "hell world"
 #define ABS(N) ((N<0)?(-N):(N))
 
-void	loop(char **curr_line, t_point **line, int y, int size)
+void	loop(char **curr_line, t_point ***map, int y)
 {
 	int x;
-
+	int a = 0;
+	t_point tmp;
 	x = 0;
-	while (curr_line[x] && curr_line[x][0] != '\0')
+	while (curr_line[a] != NULL)
+		a++;
+	while (x < a)
 	{
-		line[y] = malloc(sizeof(t_point *) * size);
-		line[y][x].x = (float)x;
-		line[y][x].y = (float)y;
-		line[y][x].z = (float)ft_atoi(curr_line[x]);
+		map[y][x] = malloc(sizeof(t_point*));
+		map[y][x]->x = (float)x;
+		map[y][x]->y = (float)y;
+		map[y][x]->z = (float)ft_atoi(curr_line[x]);
 		x++;
 	}
+	map[y][x] = NULL;
 }
 	
-t_point	**fileread(int fd)
+t_point	***fileread(int fd)
 {
 	char **curr_line;
 	int	y;
 	char *str;
-	t_point **map;
-	
+	t_point ***map;
+	int a = 0;
 	map = NULL;
+	curr_line = NULL;
 	str = malloc(sizeof(char) * 10000);	
-	map = malloc(sizeof(char) * 10000);	
+	map = malloc(sizeof(t_point***) * 10000);	
 	y = 0;
-	while(curr_line[y])
+	while(get_next_line(fd, &str) > 0)
 	{
-		ft_str_read_line(str, fd);
 		curr_line = ft_split(str, " \n");
-		loop(curr_line, map, y, ft_strlen(str));
+		a = 0;
+		while (curr_line[a] != NULL)
+			a++;
+		map[y] = malloc(sizeof(t_point**) * a);
+		loop(curr_line, map, y);
+		ft_putnbr(y);
+		ft_putchar(' ');
 		y++;
 	}
+	ft_putchar('\n');
 	map[y] = NULL;
-	free(str);
 	return (map);
 }
 
@@ -81,21 +91,13 @@ void	show_map(t_scene *scene)
 	j = 0;
 	while(scene->map[i])
 	{
-		while(/*scene->map[i][j] != NULL &&*/ j < 20)
+		while(scene->map[i][j])
 		{
-			ft_putstr("i: ");
-			ft_putnbr(i);
-			ft_putstr(" j: ");
-			ft_putnbr(j);
-			ft_putstr("          | x: ");
-			ft_putnbr(scene->map[i][j].x);
-			ft_putstr(" y: ");
-			ft_putnbr(scene->map[i][j].y);
-			ft_putstr(" z: ");
-			ft_putnbr(scene->map[i][j].z);
-			ft_putstr(" |\n");
+			ft_putnbr(scene->map[i][j]->z);
+			ft_putchar(' ');
 			j++;
 		}
+	ft_putchar('\n');
 	j = 0;
 	i++;
 	}
@@ -105,7 +107,7 @@ t_scene *init_scene(int w, int h, char *str, char **argv)
 {
         t_scene *scene;
 
-        scene = malloc(sizeof(t_scene) * 5);
+        scene = malloc(sizeof(t_scene));
 	scene->bg_color = 0x32644B;
 	scene->bg_color = 0x181818;
         scene->win_height = h;
@@ -131,7 +133,20 @@ int	deal_key(int key, t_scene *scene)
 	ft_putchar('\n');
 	if (key == 49)
 		exit(0);
-	fill_img(scene, 0xFF00FF);
+	if (key == 0)
+		scene->bg_color -= 0xFF0000;
+	if (key == 1)
+		scene->bg_color -= 0x00FF00;
+	if (key == 2)
+		scene->bg_color -= 0x0000FF;
+	if (key == 6)
+		scene->bg_color += 0xFF0000;
+	if (key == 7)
+		scene->bg_color += 0x00FF00;
+	if (key == 8)
+		scene->bg_color += 0x0000FF;
+	fill_img(scene, scene->bg_color);
+	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	return (0);
 }
 
@@ -143,7 +158,7 @@ int	main(int argc, char **argv)
 	if (argc == 2)
 		scene = init_scene(WIDTH, HEIGHT, TITLE, argv);
 	fill_img(scene, scene->bg_color);
-
+	show_map(scene);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
  	mlx_key_hook(scene->win_ptr, deal_key, scene);
 	mlx_loop(scene->mlx_ptr);
