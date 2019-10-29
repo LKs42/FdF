@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/29 18:13:30 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/29 18:16:39 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	loop(char **curr_line, t_point **map, int y, t_scene *scene)
 		x++;
 	}
 	scene->map_w = x;
-	map[y][x] = NULL;
 }
 	
 t_point	**fileread(int fd, t_scene *scene)
@@ -43,7 +42,7 @@ t_point	**fileread(int fd, t_scene *scene)
 	char **curr_line;
 	int	y;
 	char *str;
-	t_point ***map;
+	t_point **map;
 	int a = 0;
 	map = NULL;
 	curr_line = NULL;
@@ -186,7 +185,7 @@ void	draw_scene(t_scene *scene)
 	{
 		while(++j < scene->map_w - 1)
 		{
-			liner(scene->str, ft_rot_matrix(scene->map[i][j], scene), ft_rot_matrix(scene->map[i][j + 1], scene), 0xFFFFFF);
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene), ft_rot_matrix(&scene->map[i][j + 1], scene), 0xFFFFFF);
 		}
 		j = -1;
 	}
@@ -196,7 +195,7 @@ j = -1;
 	{
 		while(++j < scene->map_w)
 		{
-			liner(scene->str, ft_rot_matrix(scene->map[i][j], scene), ft_rot_matrix(scene->map[i + 1][j], scene), 0x00FF00);
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene), ft_rot_matrix(&scene->map[i + 1][j], scene), 0x00FF00);
 		}
 		j = -1;
 	}
@@ -206,12 +205,12 @@ j = -1;
 	{
 		while(++j < scene->map_w - 1)
 		{
-			liner(scene->str, ft_rot_matrix(scene->map[i][j], scene), ft_rot_matrix(scene->map[i + 1][j + 1], scene), 0x00FF00);
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene), ft_rot_matrix(&scene->map[i + 1][j + 1], scene), 0x00FF00);
 		}
 		j = -1;
 	}
 }
-
+/*
 void	show_map(t_scene *scene)
 {
 	int i;
@@ -232,7 +231,7 @@ void	show_map(t_scene *scene)
 	i++;
 	}
 }
-
+*/
 t_scene *init_scene(int w, int h, char *str, char **argv)
 {
         t_scene *scene;
@@ -312,7 +311,7 @@ int	main(int argc, char **argv)
 	if (argc == 2)
 		scene = init_scene(WIDTH, HEIGHT, TITLE, argv);
 	fill_img(scene, scene->bg_color);
-	show_map(scene);
+	//show_map(scene);
 	draw_scene(scene);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
  	mlx_key_hook(scene->win_ptr, deal_key, scene);
