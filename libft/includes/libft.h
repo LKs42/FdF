@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/29 17:44:55 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/29 18:11:21 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct	s_scene
 	float		focale;
 	int		map_h;
 	int		map_w;
-	t_point	***map;
+	t_point	**map;
 	float	rot_x;
 	float	rot_y;
 	float	rot_z;

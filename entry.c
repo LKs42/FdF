@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/29 18:10:41 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/29 18:13:30 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,25 @@
 #define TITLE "hell world"
 #define ABS(N) ((N<0)?(-N):(N))
 
-void	loop(char **curr_line, t_point ***map, int y, t_scene *scene)
+void	loop(char **curr_line, t_point **map, int y, t_scene *scene)
 {
 	int x;
 	int a = 0;
-	t_point tmp;
 	x = 0;
 	while (curr_line[a] != NULL)
 		a++;
 	while (x < a)
 	{
-		map[y][x] = malloc(sizeof(t_point*));
-		map[y][x]->x = (float)x;
-		map[y][x]->y = (float)y;
-		map[y][x]->z = (float)ft_atoi(curr_line[x]);
+		map[y][x].x = (float)x;
+		map[y][x].y = (float)y;
+		map[y][x].z = (float)ft_atoi(curr_line[x]);
 		x++;
 	}
 	scene->map_w = x;
 	map[y][x] = NULL;
 }
 	
-t_point	***fileread(int fd, t_scene *scene)
+t_point	**fileread(int fd, t_scene *scene)
 {
 	char **curr_line;
 	int	y;
@@ -50,7 +48,7 @@ t_point	***fileread(int fd, t_scene *scene)
 	map = NULL;
 	curr_line = NULL;
 	str = malloc(sizeof(char) * 10000);	
-	map = malloc(sizeof(t_point***) * 10000);	
+	map = (t_point**)malloc(sizeof(t_point*) * 10000);	
 	y = 0;
 	while(get_next_line(fd, &str) > 0)
 	{
@@ -58,7 +56,7 @@ t_point	***fileread(int fd, t_scene *scene)
 		a = 0;
 		while (curr_line[a] != NULL)
 			a++;
-		map[y] = malloc(sizeof(t_point**) * a);
+		map[y] = (t_point*)malloc(sizeof(t_point) * a);
 		loop(curr_line, map, y, scene);
 		y++;
 	}
