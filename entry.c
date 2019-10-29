@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/29 17:51:58 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/29 18:10:41 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,12 @@ void	ft_scale(t_point *point, float scale)
 
 t_point	*ft_rot_matrix(t_point *point, t_scene *scene)
 {
-	float focale;
 	t_point *new_point;
+	float focale;
 	float ag;
 
+	new_point = malloc(sizeof(t_point));
 	ag = scene->rot_y;;
-	new_point = malloc(sizeof(t_point) * 5);
 	focale = scene->focale;
 
 	ft_rot_x(point, scene, new_point);
@@ -199,6 +199,16 @@ j = -1;
 		while(++j < scene->map_w)
 		{
 			liner(scene->str, ft_rot_matrix(scene->map[i][j], scene), ft_rot_matrix(scene->map[i + 1][j], scene), 0x00FF00);
+		}
+		j = -1;
+	}
+i = -1;
+j = -1;
+	while (++i < scene->map_h - 1)
+	{
+		while(++j < scene->map_w - 1)
+		{
+			liner(scene->str, ft_rot_matrix(scene->map[i][j], scene), ft_rot_matrix(scene->map[i + 1][j + 1], scene), 0x00FF00);
 		}
 		j = -1;
 	}
