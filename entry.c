@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/29 18:16:39 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/30 17:07:34 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	loop(char **curr_line, t_point **map, int y, t_scene *scene)
 		map[y][x].x = (float)x;
 		map[y][x].y = (float)y;
 		map[y][x].z = (float)ft_atoi(curr_line[x]);
+		map[y][x].color = 0x888800 + 0x00000F * (int)map[y][x].z;
 		x++;
 	}
 	scene->map_w = x;
@@ -61,15 +62,18 @@ t_point	**fileread(int fd, t_scene *scene)
 	}
 	scene->map_h = y;
 	map[y] = NULL;
+	free(str);
 	return (map);
 }
 
 void fill_pixel(int *my_image_string, int x, int y, int color)
 {
 	int i;
-
-	i = x + WIDTH*y;
+	if (!(x <= 0 || y <= 0 || y >= HEIGHT || x >= WIDTH))
+	{
+	i = x + WIDTH * y;
 	my_image_string[i] = color;
+	}
 }
 
 t_point *ft_rot_x(t_point *point, t_scene *scene, t_point *new_point)
@@ -78,7 +82,7 @@ t_point *ft_rot_x(t_point *point, t_scene *scene, t_point *new_point)
 
 	ag = scene->rot_x;
 
-	new_point->x = point->x + 5;
+	new_point->x = point->x;
 	new_point->y = point->y * cos(ag) - point->z * sin(ag);
 	new_point->z = point->y * sin(ag) + point->z * cos(ag);
 	return (new_point);
@@ -119,29 +123,35 @@ void	ft_scale(t_point *point, float scale)
 	point->z *= scale;
 }
 
-t_point	*ft_rot_matrix(t_point *point, t_scene *scene)
+void	ft_height(t_point *point, float scale)
 {
-	t_point *new_point;
+	point->z *= scale;
+}
+
+t_point	*ft_rot_matrix(t_point *point, t_scene *scene, t_point *new_point)
+{
 	float focale;
 	float ag;
 
-	new_point = malloc(sizeof(t_point));
 	ag = scene->rot_y;;
 	focale = scene->focale;
 
+	new_point->color = point->color;
+	
 	ft_rot_x(point, scene, new_point);
 	ft_rot_y(new_point, scene, new_point);
 	ft_rot_z(new_point, scene, new_point);
 	
-	ft_scale(new_point, scene->scale);
 
 //	new_point->x = (focale * new_point->x)/point->z;
 //	new_point->y = (focale * new_point->y)/point->z;
+	
+	ft_scale(new_point, scene->scale);
 	return (new_point);
 }
 
-
-void liner(int *img, t_point *a, t_point *b, int color) {
+void liner(int *img, t_point *a, t_point *b)
+{
 	int x0 = a->x;
 	int x1 = b->x;
 	int y0 = a->y;
@@ -153,7 +163,8 @@ void liner(int *img, t_point *a, t_point *b, int color) {
 
 	while(!(x0==x1 && y0==y1))
 	{
-		fill_pixel(img, x0, y0, color);
+	//	fill_pixel(img, x0, y0, color);
+		fill_pixel(img, x0, y0, b->color);
 		e2 = err;
 		if (e2 >-dx) { err -= dy; x0 += sx; }
 		if (e2 < dy) { err += dx; y0 += sy; }
@@ -179,13 +190,18 @@ void	draw_scene(t_scene *scene)
 	int i;
 	int j;
 
+	t_point *new_point;
+	new_point = malloc(sizeof(t_point*));
+	t_point *new_point2;
+	new_point2 = malloc(sizeof(t_point*));
+
 	i = -1;
 	j = -1;
 	while (++i < scene->map_h)
 	{
 		while(++j < scene->map_w - 1)
 		{
-			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene), ft_rot_matrix(&scene->map[i][j + 1], scene), 0xFFFFFF);
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene, new_point), ft_rot_matrix(&scene->map[i][j + 1], scene, new_point2));
 		}
 		j = -1;
 	}
@@ -195,7 +211,7 @@ j = -1;
 	{
 		while(++j < scene->map_w)
 		{
-			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene), ft_rot_matrix(&scene->map[i + 1][j], scene), 0x00FF00);
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene, new_point), ft_rot_matrix(&scene->map[i + 1][j], scene, new_point2));
 		}
 		j = -1;
 	}
@@ -205,12 +221,24 @@ j = -1;
 	{
 		while(++j < scene->map_w - 1)
 		{
-			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene), ft_rot_matrix(&scene->map[i + 1][j + 1], scene), 0x00FF00);
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j + 1], scene, new_point), ft_rot_matrix(&scene->map[i + 1][j], scene, new_point2));
 		}
 		j = -1;
 	}
+i = -1;
+j = -1;
+	while (++i < scene->map_h - 1)
+	{
+		while(++j < scene->map_w - 1)
+		{
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene, new_point), ft_rot_matrix(&scene->map[i + 1][j + 1], scene, new_point2));
+		}
+		j = -1;
+	}
+	free(new_point);
+	free(new_point2);
 }
-/*
+
 void	show_map(t_scene *scene)
 {
 	int i;
@@ -218,11 +246,11 @@ void	show_map(t_scene *scene)
 	
 	i = 0;
 	j = 0;
-	while(scene->map[i])
+	while(i < scene->map_h)
 	{
-		while(scene->map[i][j])
+		while(j < scene->map_w)
 		{
-			ft_putnbr(scene->map[i][j]->z);
+			ft_putnbr((int)&scene->map[i][j].z);
 			ft_putchar(' ');
 			j++;
 		}
@@ -231,7 +259,7 @@ void	show_map(t_scene *scene)
 	i++;
 	}
 }
-*/
+
 t_scene *init_scene(int w, int h, char *str, char **argv)
 {
         t_scene *scene;
@@ -286,20 +314,21 @@ int	deal_key(int key, t_scene *scene)
 	if (key == 126)
 		scene->scale -= 1;
 	if (key == 0)
-		scene->bg_color -= 0xFF0000;
+		scene->bg_color -= 0x010000;
 	if (key == 1)
-		scene->bg_color -= 0x00FF00;
+		scene->bg_color -= 0x000100;
 	if (key == 2)
-		scene->bg_color -= 0x0000FF;
+		scene->bg_color -= 0x000001;
 	if (key == 6)
-		scene->bg_color += 0xFF0000;
+		scene->bg_color += 0x010000;
 	if (key == 7)
-		scene->bg_color += 0x00FF00;
+		scene->bg_color += 0x000100;
 	if (key == 8)
-		scene->bg_color += 0x0000FF;
+		scene->bg_color += 0x000001;
 	fill_img(scene, scene->bg_color);
 	draw_scene(scene);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
+	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 50, 0xFFFFFF, scene->title);
 	return (0);
 }
 
@@ -307,13 +336,15 @@ int	main(int argc, char **argv)
 {
 	t_scene *scene;
 
+
 	scene = NULL;
 	if (argc == 2)
-		scene = init_scene(WIDTH, HEIGHT, TITLE, argv);
+		scene = init_scene(WIDTH, HEIGHT, argv[1], argv);
 	fill_img(scene, scene->bg_color);
 	//show_map(scene);
 	draw_scene(scene);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
+	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 50, 0xFFFFFF, scene->title);
  	mlx_key_hook(scene->win_ptr, deal_key, scene);
 	mlx_loop(scene->mlx_ptr);
 	return (0);
