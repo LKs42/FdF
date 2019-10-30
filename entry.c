@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/30 17:07:34 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/10/30 20:03:14 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	loop(char **curr_line, t_point **map, int y, t_scene *scene)
 		map[y][x].x = (float)x;
 		map[y][x].y = (float)y;
 		map[y][x].z = (float)ft_atoi(curr_line[x]);
-		map[y][x].color = 0x888800 + 0x00000F * (int)map[y][x].z;
+		map[y][x].color = 0x22B41F;
 		x++;
 	}
 	scene->map_w = x;
@@ -142,7 +142,6 @@ t_point	*ft_rot_matrix(t_point *point, t_scene *scene, t_point *new_point)
 	ft_rot_y(new_point, scene, new_point);
 	ft_rot_z(new_point, scene, new_point);
 	
-
 //	new_point->x = (focale * new_point->x)/point->z;
 //	new_point->y = (focale * new_point->y)/point->z;
 	
@@ -160,11 +159,10 @@ void liner(int *img, t_point *a, t_point *b)
 	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
 	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
 	int err = (dx>dy ? dx : -dy)/2, e2;
-
+	
 	while(!(x0==x1 && y0==y1))
 	{
-	//	fill_pixel(img, x0, y0, color);
-		fill_pixel(img, x0, y0, b->color);
+		fill_pixel(img, x0, y0, a->color);
 		e2 = err;
 		if (e2 >-dx) { err -= dy; x0 += sx; }
 		if (e2 < dy) { err += dx; y0 += sy; }
@@ -260,6 +258,21 @@ void	show_map(t_scene *scene)
 	}
 }
 
+int rgb_r(int color)
+{
+	return ((color & 0xFF0000) >> 16);
+}
+
+int rgb_g(int color)
+{
+	return((color & 0x00FF00) >> 8);
+}
+
+int rgb_b(int color)
+{
+	return ((color & 0x0000FF));
+}
+
 t_scene *init_scene(int w, int h, char *str, char **argv)
 {
         t_scene *scene;
@@ -327,6 +340,18 @@ int	deal_key(int key, t_scene *scene)
 		scene->bg_color += 0x000001;
 	fill_img(scene, scene->bg_color);
 	draw_scene(scene);
+
+	ft_putchar('R');
+	ft_putnbr(rgb_r(scene->bg_color));
+	ft_putchar(' ');
+
+	ft_putchar('G');
+	ft_putnbr(rgb_g(scene->bg_color));
+	ft_putchar(' ');
+	
+	ft_putchar('B');
+	ft_putnbr(rgb_b(scene->bg_color));
+	ft_putchar('\n');
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 50, 0xFFFFFF, scene->title);
 	return (0);
@@ -344,7 +369,9 @@ int	main(int argc, char **argv)
 	//show_map(scene);
 	draw_scene(scene);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
+
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 50, 0xFFFFFF, scene->title);
+
  	mlx_key_hook(scene->win_ptr, deal_key, scene);
 	mlx_loop(scene->mlx_ptr);
 	return (0);
