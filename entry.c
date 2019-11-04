@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/04 19:13:25 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/04 19:16:12 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -430,7 +430,6 @@ int	main(int argc, char **argv)
 	draw_scene(scene);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	mlx_key_hook(scene->win_ptr, deal_key, scene);
-	mlx_loop_hook(scene->win_ptr, draw_scene, scene);
 	draw_hud(scene);
 	mlx_loop(scene->mlx_ptr);
 	return (0);
