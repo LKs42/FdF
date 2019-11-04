@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/04 18:32:44 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/04 19:10:16 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,6 +236,11 @@ int rgb_b(int color)
 void	draw_hud(t_scene *scene)
 {
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 50, 0xFFFFFF, scene->title);
+	
+	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 30, 70, 0xFFFFFF, "R: ");
+	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 30, 90, 0xFFFFFF, "G: ");
+	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 30, 110, 0xFFFFFF, "B: ");
+	
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 70, 0xFFFFFF, ft_itoa_base(rgb_r(scene->bg_color), 10));
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 90, 0xFFFFFF, ft_itoa_base(rgb_g(scene->bg_color), 10));
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 110, 0xFFFFFF, ft_itoa_base(rgb_b(scene->bg_color), 10));
@@ -271,28 +276,6 @@ void	draw_scene(t_scene *scene)
 		}
 		j = -1;
 	}
-/*
-	i = -1;
-	j = -1;
-	while (++i < scene->map_h - 1)
-	{
-		while(++j < scene->map_w - 1)
-		{
-			liner(scene->str, ft_rot_matrix(&scene->map[i][j + 1], scene, new_point), ft_rot_matrix(&scene->map[i + 1][j], scene, new_point2));
-		}
-		j = -1;
-	}
-	i = -1;
-	j = -1;
-	while (++i < scene->map_h - 1)
-	{
-		while(++j < scene->map_w - 1)
-		{
-			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene, new_point), ft_rot_matrix(&scene->map[i + 1][j + 1], scene, new_point2));
-		}
-		j = -1;
-	}
-*/
 	free(new_point);
 	free(new_point2);
 }
@@ -364,7 +347,7 @@ int	deal_key(int key, t_scene *scene)
 {
 	ft_putnbr(key);
 	ft_putchar('\n');
-	if (key == 49)
+	if (key == 53)
 		exit(0);
 	if (key == 12)
 		scene->rot_x += 0.04;
@@ -408,9 +391,9 @@ int	deal_key(int key, t_scene *scene)
 	}
 	if (key == 120)
 	{
-		scene->rot_x = 0.954;
-	//		scene->rot_y = 0.785398;
-		scene->rot_z = 0.785398;
+		scene->rot_x = 1.04;
+		scene->rot_y = -0.48;
+		scene->rot_z = 0.4;
 	}
 	fill_img(scene, scene->bg_color);
 	if (key == 0x7B)
