@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/10/29 18:11:21 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/04 15:14:17 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,26 +26,26 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
-typedef struct	s_point
+typedef struct		s_point
 {
 	float x;
 	float y;
 	float z;
 	int color;
-}				t_point;
+}					t_point;
 
-typedef struct	s_scene
+typedef struct		s_scene
 {
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*img_ptr;
 	char	*title;
 	int		*str;
-	int 	win_width;
+	int		win_width;
 	int		win_height;
 	int		file_w;
 	int		file_h;
-	int 	bpp;
+	int		bpp;
 	int		sl;
 	int		endian;
 	float		focale;
@@ -55,9 +55,11 @@ typedef struct	s_scene
 	float	rot_x;
 	float	rot_y;
 	float	rot_z;
+	float	tr_x;
+	float	tr_y;
 	float	scale;
 	int	bg_color;
-}				t_scene;
+}					t_scene;
 
 size_t				ft_strlen(const char *str);
 int					ft_atoi(const char *str);
@@ -92,6 +94,7 @@ int					ft_memcmp(const void *s1, const void *s2, size_t n);
 void				*ft_memalloc(size_t size);
 void				ft_memdel(void **ap);
 char				*ft_strnew(size_t size);
+char				*ft_itoa_base(int value, int base);
 void				ft_strdel(char **as);
 void				ft_strclr(char *s);
 void				ft_striter(char *s, void(*f)(char *));

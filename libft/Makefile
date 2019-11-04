@@ -6,7 +6,7 @@
 #    By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/02 15:19:01 by lugibone          #+#    #+#              #
-#    Updated: 2019/06/04 17:13:12 by lugibone         ###   ########.fr        #
+#    Updated: 2019/11/04 14:48:47 by lugibone         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -111,6 +111,7 @@ SRC_NAME = ft_atoi.c\
 	ft_strtrim.c\
 	ft_tolower.c\
 	ft_toupper.c\
+	ft_itoa_base.c\
 	get_next_line.c\
 	ft_str_read.c\
 	ft_check_extension.c\
