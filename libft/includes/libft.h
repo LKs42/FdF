@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/05 17:42:58 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/05 17:46:03 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <string.h>
 # include <sys/types.h>
 # include <sys/uio.h>
+# include <fcntl.h>
 # include <math.h>
 
 enum	e_state

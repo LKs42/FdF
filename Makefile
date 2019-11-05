@@ -6,7 +6,7 @@
 #    By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/02 15:19:01 by lugibone          #+#    #+#              #
-#    Updated: 2019/11/05 17:41:56 by lugibone         ###   ########.fr        #
+#    Updated: 2019/11/05 18:00:39 by lugibone         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,11 +52,14 @@ OBJ_NAME = $(SRC_NAME:.c=.o)
 SRC_NAME =	bresenham.c \
 			draw.c \
 			transformation.c \
+			color.c \
+			keyboard.c \
 			matrix.c \
 			file_reading.c \
 			init.c \
 			pixel.c \
 			parsing.c \
+			ft_itoa_base.c \
 			main.c
 OBJS := $(addprefix $(OBJ_PATH)/,$(OBJ_NAME))
 SRCS := $(addprefix $(SRC_PATH)/,$(SRC_NAME))

@@ -4,6 +4,7 @@ int	main(int argc, char **argv)
 {
 	t_scene *scene;
 
+
 	scene = NULL;
 	if (argc == 2 && (!(check_extension(argv[1], ".fdf"))))
 		scene = init_scene(WIDTH, HEIGHT, argv[1], argv);
