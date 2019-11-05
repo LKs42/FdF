@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/11/05 19:21:05 by lugibone          #+#    #+#             */
+/*   Updated: 2019/11/05 19:21:17 by lugibone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 void	set_scene(t_scene *scene)
@@ -14,7 +26,7 @@ void	set_scene(t_scene *scene)
 	scene->scale = 10;
 }
 
-t_scene *init_scene(int w, int h, char *str, char **argv)
+t_scene	*init_scene(int w, int h, char *str, char **argv)
 {
 	t_scene *scene;
 
@@ -26,8 +38,10 @@ t_scene *init_scene(int w, int h, char *str, char **argv)
 	scene->title = str;
 	scene->win_ptr = mlx_new_window(scene->mlx_ptr, w, h, str);
 	scene->state = TRANSLATE;
-	scene->img_ptr = mlx_new_image(scene->mlx_ptr, scene->win_width, scene->win_height);
-	scene->str = (int*)mlx_get_data_addr(scene->img_ptr, &scene->bpp, &scene->sl, &scene->endian);
+	scene->img_ptr = mlx_new_image(scene->mlx_ptr,
+scene->win_width, scene->win_height);
+	scene->str = (int*)mlx_get_data_addr(scene->img_ptr,
+&scene->bpp, &scene->sl, &scene->endian);
 	scene->map = fileread(open(argv[1], O_RDONLY), scene);
 	return (scene);
 }

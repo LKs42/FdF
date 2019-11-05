@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   keyboard.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/11/05 19:21:29 by lugibone          #+#    #+#             */
+/*   Updated: 2019/11/05 19:22:36 by lugibone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 void	key_translate(int key, t_scene *scene)
@@ -38,11 +50,11 @@ void	key_scale(int key, t_scene *scene)
 
 void	key_event(int key, t_scene *scene)
 {
-	if (scene->state == TRANSLATE)		
+	if (scene->state == TRANSLATE)
 		key_translate(key, scene);
-	if (scene->state == ROTATE)		
+	if (scene->state == ROTATE)
 		key_rotate(key, scene);
-	if (scene->state == SCALE)		
+	if (scene->state == SCALE)
 		key_scale(key, scene);
 	if (key == 122)
 	{
@@ -58,14 +70,14 @@ void	key_event(int key, t_scene *scene)
 	}
 }
 
-int	deal_key(int key, t_scene *scene)
+int		deal_key(int key, t_scene *scene)
 {
 	key_event(key, scene);
 	if (key == 53)
 		exit(0);
 	if (key == 99)
 		map_iter(scene, change_color, 2);
-    if (key == 49)
+	if (key == 49)
 	{
 		scene->state++;
 		if (scene->state > SCALE)
@@ -73,7 +85,8 @@ int	deal_key(int key, t_scene *scene)
 	}
 	fill_img(scene, scene->bg_color);
 	draw_scene(scene);
-	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
-	draw_hud(scene);	
+	mlx_put_image_to_window(scene->mlx_ptr,
+scene->win_ptr, scene->img_ptr, 0, 0);
+	draw_hud(scene);
 	return (0);
 }

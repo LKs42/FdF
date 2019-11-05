@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   matrix.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/11/05 19:25:10 by lugibone          #+#    #+#             */
+/*   Updated: 2019/11/05 19:27:40 by lugibone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
-t_point *ft_rot_x(t_point *point, t_scene *scene, t_point *new_point)
+t_point	*ft_rot_x(t_point *point, t_scene *scene, t_point *new_point)
 {
-	float ag;
-	t_point tmp;
+	float	ag;
+	t_point	tmp;
 
 	tmp.x = point->x;
 	tmp.y = point->y;
@@ -15,10 +27,9 @@ t_point *ft_rot_x(t_point *point, t_scene *scene, t_point *new_point)
 	return (new_point);
 }
 
-
-t_point *ft_rot_y(t_point *point, t_scene *scene, t_point *new_point)
+t_point	*ft_rot_y(t_point *point, t_scene *scene, t_point *new_point)
 {
-	float ag;
+	float	ag;
 	t_point tmp;
 
 	tmp.x = point->x;
@@ -31,10 +42,9 @@ t_point *ft_rot_y(t_point *point, t_scene *scene, t_point *new_point)
 	return (new_point);
 }
 
-
-t_point *ft_rot_z(t_point *point, t_scene *scene, t_point *new_point)
+t_point	*ft_rot_z(t_point *point, t_scene *scene, t_point *new_point)
 {
-	float ag;
+	float	ag;
 	t_point tmp;
 
 	tmp.x = point->x;
@@ -59,11 +69,11 @@ t_point	*ft_rot_matrix(t_point *point, t_scene *scene, t_point *new_point)
 	float focale;
 	float ag;
 
-	ag = scene->rot_y;;
+	ag = scene->rot_y;
 	focale = scene->focale;
 	new_point->color = point->color;
-	new_point->x = point->x - scene->map_w/2;
-	new_point->y = point->y - scene->map_h/2;
+	new_point->x = point->x - scene->map_w / 2;
+	new_point->y = point->y - scene->map_h / 2;
 	new_point->z = point->z;
 	ft_rot_x(new_point, scene, new_point);
 	ft_rot_y(new_point, scene, new_point);
