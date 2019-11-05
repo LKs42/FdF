@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 18:45:50 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/05 18:47:57 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/05 19:54:56 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,9 @@ void	liner(int *img, t_point *a, t_point *b)
 	{
 		fill_pixel(img, tab[0], tab[2], a->color);
 		tab[9] = tab[8];
-		if (tab[9] > -tab[4])
-		{
-			tab[8] -= tab[6];
-			tab[0] += tab[5];
-		}
-		if (tab[9] < tab[6])
-		{
-			tab[8] += tab[4];
-			tab[2] += tab[7];
-		}
+		tab[8] -= (tab[9] > -tab[4]) ? tab[6] : 0;
+		tab[0] += (tab[9] > -tab[4]) ? tab[5] : 0;
+		tab[8] += (tab[9] < tab[6]) ? tab[4] : 0;
+		tab[2] += (tab[9] < tab[6]) ? tab[7] : 0;
 	}
 }
