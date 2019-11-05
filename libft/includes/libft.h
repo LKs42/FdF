@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/05 13:50:35 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/05 17:42:58 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <sys/uio.h>
 # include <math.h>
 
-enum e_state
-{TRANSLATE, ROTATE, SCALE, COLOR}	STATE;
+enum	e_state
+{TRANSLATE, ROTATE, SCALE}	state;
 
 typedef struct		s_list
 {
@@ -31,38 +31,39 @@ typedef struct		s_list
 
 typedef struct		s_point
 {
-	float x;
-	float y;
-	float z;
-	int color;
+	float			x;
+	float			y;
+	float			z;
+	int				color;
 }					t_point;
 
 typedef struct		s_scene
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	void	*img_ptr;
-	char	*title;
-	int		*str;
-	int		win_width;
-	int		win_height;
-	int		file_w;
-	int		file_h;
-	int		bpp;
-	int		sl;
-	int		endian;
-	float		focale;
-	int		map_h;
-	int		map_w;
-	t_point	**map;
-	float	rot_x;
-	float	rot_y;
-	float	rot_z;
-	float	tr_x;
-	float	tr_y;
-	float	scale;
-	int	bg_color;
-	enum	e_state	STATE;
+	enum e_state	state;
+	char			*title;
+	void			*mlx_ptr;
+	void			*win_ptr;
+	float			focale;
+	float			rot_x;
+	float			rot_y;
+	float			rot_z;
+	float			tr_x;
+	float			tr_y;
+	float			scale;
+	void			*img_ptr;
+	int				*str;
+	int				win_width;
+	int				win_height;
+	int				file_w;
+	int				file_h;
+	int				bpp;
+	int				sl;
+	int				endian;
+	int				map_h;
+	int				map_w;
+	int				bg_color;
+
+	t_point			**map;
 }					t_scene;
 
 size_t				ft_strlen(const char *str);
@@ -135,6 +136,5 @@ int					ft_iterative_factorial(int nb);
 char				*ft_str_read(char *str, int fd);
 char				*ft_str_read_line(char *str, int fd);
 int					get_next_line(int const fd, char **line);
-int					ft_check_extension(char *str, char *str2);
 
 #endif
