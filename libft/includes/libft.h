@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/04 15:14:17 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/05 13:50:35 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <sys/types.h>
 # include <sys/uio.h>
 # include <math.h>
+
+enum e_state
+{TRANSLATE, ROTATE, SCALE, COLOR}	STATE;
 
 typedef struct		s_list
 {
@@ -59,6 +62,7 @@ typedef struct		s_scene
 	float	tr_y;
 	float	scale;
 	int	bg_color;
+	enum	e_state	STATE;
 }					t_scene;
 
 size_t				ft_strlen(const char *str);

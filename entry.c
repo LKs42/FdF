@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/01 15:49:46 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/04 19:16:12 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/05 13:57:42 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_point *ft_rot_x(t_point *point, t_scene *scene, t_point *new_point)
 {
 	float ag;
 	t_point tmp;
-	
+
 	tmp.x = point->x;
 	tmp.y = point->y;
 	tmp.z = point->z;
@@ -98,13 +98,13 @@ t_point *ft_rot_y(t_point *point, t_scene *scene, t_point *new_point)
 {
 	float ag;
 	t_point tmp;
-	
+
 	tmp.x = point->x;
 	tmp.y = point->y;
 	tmp.z = point->z;
 
 	ag = scene->rot_y;
-	
+
 	new_point->x = tmp.x * cos(ag) + tmp.z * sin(ag);
 	new_point->y = tmp.y;
 	new_point->z = -(tmp.x) * sin(ag) + tmp.z * cos(ag);
@@ -117,13 +117,13 @@ t_point *ft_rot_z(t_point *point, t_scene *scene, t_point *new_point)
 {
 	float ag;
 	t_point tmp;
-	
+
 	tmp.x = point->x;
 	tmp.y = point->y;
 	tmp.z = point->z;
 
 	ag = scene->rot_z;
-	
+
 	new_point->x = tmp.x * cos(ag) - tmp.y * sin(ag);
 	new_point->y = tmp.x * sin(ag) + tmp.y * cos(ag);
 	new_point->z = point->z;
@@ -147,21 +147,21 @@ t_point	*ft_rot_matrix(t_point *point, t_scene *scene, t_point *new_point)
 	focale = scene->focale;
 
 	new_point->color = point->color;
-	
+
 	new_point->x = point->x - scene->map_w/2;
 	new_point->y = point->y - scene->map_h/2;
 	new_point->z = point->z;
-	
+
 	ft_rot_x(new_point, scene, new_point);
 	ft_rot_y(new_point, scene, new_point);
 	ft_rot_z(new_point, scene, new_point);
-	
+
 	new_point->x = new_point->x + scene->tr_x;
 	new_point->y = new_point->y + scene->tr_y;
 	new_point->z = new_point->z;
-	
-//	new_point->x = (focale * new_point->x)/point->z;
-//	new_point->y = (focale * new_point->y)/point->z;
+
+	//	new_point->x = (focale * new_point->x)/point->z;
+	//	new_point->y = (focale * new_point->y)/point->z;
 
 	ft_scale(new_point, scene->scale);
 	return (new_point);
@@ -236,11 +236,11 @@ int rgb_b(int color)
 void	draw_hud(t_scene *scene)
 {
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 50, 0xFFFFFF, scene->title);
-	
+
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 30, 70, 0xFFFFFF, "R: ");
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 30, 90, 0xFFFFFF, "G: ");
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 30, 110, 0xFFFFFF, "B: ");
-	
+
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 70, 0xFFFFFF, ft_itoa_base(rgb_r(scene->bg_color), 10));
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 90, 0xFFFFFF, ft_itoa_base(rgb_g(scene->bg_color), 10));
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr, 50, 110, 0xFFFFFF, ft_itoa_base(rgb_b(scene->bg_color), 10));
@@ -322,6 +322,7 @@ t_scene *init_scene(int w, int h, char *str, char **argv)
 	scene->tr_x = 5;
 	scene->tr_y = 5;
 	scene->scale = 10;
+	scene->STATE = TRANSLATE;
 	scene->img_ptr = mlx_new_image(scene->mlx_ptr, scene->win_width, scene->win_height);
 	scene->str = (int*)mlx_get_data_addr(scene->img_ptr, &scene->bpp, &scene->sl, &scene->endian);
 	scene->map = fileread(open(argv[1], O_RDONLY), scene);
@@ -343,12 +344,31 @@ void	incrementz(t_point *point, float a)
 	point->z += a;
 }
 
-int	deal_key(int key, t_scene *scene)
+void	change_color(t_point *point, float a)
 {
-	ft_putnbr(key);
-	ft_putchar('\n');
-	if (key == 53)
-		exit(0);
+	(void)a;
+	point->color = point->z * 0x111111;
+	if (point->color > 0xFFFFFF)
+		point->color = 0xFFFFFF;
+	if (point->color < 0x000000)
+		point->color = 0x000000;
+}
+
+void	key_event(int key, t_scene *scene)
+{
+	switch(scene->STATE)
+	{
+	case TRANSLATE:
+	if (key == 0x7B)
+		scene->tr_x -= 0.5;
+	if (key == 0x7C)
+		scene->tr_x += 0.5;
+	if (key == 0x7D)
+		scene->tr_y += 0.5;
+	if (key == 0x7E)
+		scene->tr_y -= 0.5;
+	break;
+	case ROTATE:
 	if (key == 12)
 		scene->rot_x += 0.04;
 	if (key == 13)
@@ -367,10 +387,25 @@ int	deal_key(int key, t_scene *scene)
 		scene->rot_z -= 0.04;
 	if (key == 31)
 		scene->rot_z = 0;
+	break;
+	case SCALE:
 	if (key == 0x74)
 		scene->scale += 1;
 	if (key == 0x79)
 		scene->scale -= 1;
+	break;
+	}
+}
+
+int	deal_key(int key, t_scene *scene)
+{
+	ft_putnbr(key);
+	ft_putchar('\n');
+	if (key == 53)
+		exit(0);
+	key_event(key, scene);
+	if (key == 49)
+		map_iter(scene, change_color, 2);
 	if (key == 0)
 		scene->bg_color -= 0x010000;
 	if (key == 1)
@@ -407,7 +442,7 @@ int	deal_key(int key, t_scene *scene)
 	draw_scene(scene);
 	mlx_put_image_to_window(scene->mlx_ptr, scene->win_ptr, scene->img_ptr, 0, 0);
 	draw_hud(scene);	
-return (0);
+	return (0);
 }
 
 int	check_extension(char *str, char *extension)
