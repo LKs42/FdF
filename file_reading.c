@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:08:59 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/06 17:44:03 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/06 19:21:19 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	show_map(t_scene *scene)
 t_point	**map_realloc(t_point **map, int y)
 {
 	t_point **map2;
-
+//fuite de mémoire ici car tu free pas toutes les dimensions des maps enfin je suppose vu que ta pas tester
 	map2 = NULL;
 	map2 = malloc(sizeof(t_point*) * (y + 1));
 	ft_memcpy(map2, map, sizeof(t_point*) * (y + 1));
