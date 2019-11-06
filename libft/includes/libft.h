@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 15:23:19 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/05 17:46:03 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/06 14:10:07 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ typedef struct		s_scene
 	int				map_h;
 	int				map_w;
 	int				bg_color;
-
 	t_point			**map;
+	t_point			*point_a;
+	t_point			*point_b;
 }					t_scene;
 
 size_t				ft_strlen(const char *str);

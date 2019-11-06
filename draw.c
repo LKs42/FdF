@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 18:52:26 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/05 19:08:39 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/06 14:11:48 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,26 +48,20 @@ void	draw_scene(t_scene *scene)
 {
 	int		i;
 	int		j;
-	t_point *new_point;
-	t_point *new_point2;
 
-	new_point = malloc(sizeof(t_point*));
-	new_point2 = malloc(sizeof(t_point*));
 	i = -1;
 	j = -1;
 	while (++i < scene->map_h)
 	{
 		while (++j < scene->map_w - 1)
-			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene, new_point), ft_rot_matrix(&scene->map[i][j + 1], scene, new_point2));
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene, scene->point_a), ft_rot_matrix(&scene->map[i][j + 1], scene, scene->point_b));
 		j = -1;
 	}
 	i = -1;
 	while (++i < scene->map_h - 1)
 	{
 		while (++j < scene->map_w)
-			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene, new_point), ft_rot_matrix(&scene->map[i + 1][j], scene, new_point2));
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene, scene->point_a), ft_rot_matrix(&scene->map[i + 1][j], scene, scene->point_b));
 		j = -1;
 	}
-	free(new_point);
-	free(new_point2);
 }
