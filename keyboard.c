@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:21:29 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/05 19:22:36 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/06 17:48:29 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,9 @@ int		deal_key(int key, t_scene *scene)
 {
 	key_event(key, scene);
 	if (key == 53)
-		exit(0);
+	{
+		file_error(scene);
+	}
 	if (key == 99)
 		map_iter(scene, change_color, 2);
 	if (key == 49)
@@ -86,7 +88,7 @@ int		deal_key(int key, t_scene *scene)
 	fill_img(scene, scene->bg_color);
 	draw_scene(scene);
 	mlx_put_image_to_window(scene->mlx_ptr,
-scene->win_ptr, scene->img_ptr, 0, 0);
+			scene->win_ptr, scene->img_ptr, 0, 0);
 	draw_hud(scene);
 	return (0);
 }

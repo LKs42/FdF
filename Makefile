@@ -6,7 +6,7 @@
 #    By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/02 15:19:01 by lugibone          #+#    #+#              #
-#    Updated: 2019/11/05 18:00:39 by lugibone         ###   ########.fr        #
+#    Updated: 2019/11/06 17:01:20 by lugibone         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ DARK_GRAY = \e[100m
 BG_WHITE = \e[107m
 
 CCC = gcc
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -g -Wall -Werror -Wextra
 MLX = minilibx_macos/libmlx.a
 SRC_PATH = ./
 OBJ_PATH = ./
