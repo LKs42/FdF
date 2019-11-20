@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/03 14:46:58 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/06 17:04:22 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/20 17:04:12 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ int	deal_key(int key, t_scene *scene);
 int	check_extension(char *str, char *extension);
 int	check_line(char *str, t_scene *scene);
 void	file_error(t_scene *scene);
+void	free2d_array(char **str);
 
 #endif

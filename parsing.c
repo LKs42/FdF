@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:27:56 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/06 15:57:28 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/20 17:03:03 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ int	check_line(char *str, t_scene *scene)
 			return (0);
 	if (scene->map_w == 0)
 		scene->map_w = i;
+	free2d_array(split);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:08:59 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/06 19:21:19 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/20 15:51:07 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	show_map(t_scene *scene)
 		i++;
 	}
 }
-
 t_point	**map_realloc(t_point **map, int y)
 {
 	t_point **map2;
@@ -67,14 +66,18 @@ t_point	**map_realloc(t_point **map, int y)
 	return (map);
 }
 
+void	usage(void)
+{
+	ft_putendl("usage: ./fdf map_path");
+}
+
 void	file_error(t_scene *scene)
 {
 	int i;
 	int j;
 
 	i = -1;
-	j = -1;
-	ft_putendl("usage: ./fdf map_path");
+	j = 0;
 	free(scene->point_a);
 	free(scene->point_b);
 	free(scene->mlx_ptr);
@@ -92,6 +95,7 @@ void	file_error(t_scene *scene)
 void	free2d_array(char **str)
 {
 	int i;
+	
 	i = 0;
 	while (str[i])
 	{
@@ -108,7 +112,9 @@ t_point	**fileread(int fd, t_scene *scene)
 	char *str;
 	t_point **map;
 	int a;
+	t_point **ptr;
 
+	ptr = NULL;
 	a = 0;
 	map = NULL;
 	curr_line = NULL;
@@ -126,9 +132,9 @@ t_point	**fileread(int fd, t_scene *scene)
 		map[y] = (t_point*)ft_memalloc(sizeof(t_point) * a);
 		loop(curr_line, map, y, scene);
 		y++;
+		free2d_array(curr_line);
 		free(str);
 	}
-	free2d_array(curr_line);
 	scene->map_h = y;
 	map[y] = NULL;
 	return (map);
