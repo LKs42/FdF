@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:24:42 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/06 16:34:10 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/20 18:45:21 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int argc, char **argv)
 	else
 		return (0);
 	fill_img(scene, scene->bg_color);
-	show_map(scene);
+//	show_map(scene);
 	draw_scene(scene);
 	mlx_put_image_to_window(scene->mlx_ptr,
 scene->win_ptr, scene->img_ptr, 0, 0);

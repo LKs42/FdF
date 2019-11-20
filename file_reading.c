@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_reading.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:08:59 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/20 15:51:07 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/20 19:12:34 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,18 +52,17 @@ void	show_map(t_scene *scene)
 		i++;
 	}
 }
+
 t_point	**map_realloc(t_point **map, int y)
 {
 	t_point **map2;
-//fuite de mémoire ici car tu free pas toutes les dimensions des maps enfin je suppose vu que ta pas tester
-	map2 = NULL;
-	map2 = malloc(sizeof(t_point*) * (y + 1));
-	ft_memcpy(map2, map, sizeof(t_point*) * (y + 1));
+	size_t s;
+
+	s = sizeof(t_point*) * (y + 1);
+	map2 = malloc(s);
+	ft_memcpy(map2, map, s - 1);
 	free(map);
-	map = malloc(sizeof(t_point*) * (y + 1));
-	ft_memcpy(map, map2, sizeof(t_point*) * (y + 1));
-	free(map2);
-	return (map);
+	return (map2);
 }
 
 void	usage(void)
@@ -74,21 +73,20 @@ void	usage(void)
 void	file_error(t_scene *scene)
 {
 	int i;
-	int j;
 
 	i = -1;
-	j = 0;
+	mlx_destroy_image(scene->mlx_ptr, scene->img_ptr);
+	mlx_destroy_window(scene->mlx_ptr, scene->win_ptr);
 	free(scene->point_a);
 	free(scene->point_b);
-	free(scene->mlx_ptr);
-	free(scene->win_ptr);
-	free(scene->img_ptr);
-	free(scene->str);
+	//free(scene->mlx_ptr);
+	//free(scene->win_ptr);
+	//free(scene->img_ptr);
 	while (++i < scene->map_h)
 		free(scene->map[i]);
 	free(scene->map);
 	free(scene);
-	while(1);
+	while(12);
 	exit(0);
 }
 
@@ -112,13 +110,11 @@ t_point	**fileread(int fd, t_scene *scene)
 	char *str;
 	t_point **map;
 	int a;
-	t_point **ptr;
 
-	ptr = NULL;
 	a = 0;
 	map = NULL;
 	curr_line = NULL;
-	map = (t_point**)ft_memalloc(sizeof(t_point*));
+	map = (t_point**)malloc(sizeof(t_point*));
 	y = 0;
 	while (get_next_line(fd, &str) > 0)
 	{
@@ -129,13 +125,12 @@ t_point	**fileread(int fd, t_scene *scene)
 		a = 0;
 		while (curr_line[a] != NULL)
 			a++;
-		map[y] = (t_point*)ft_memalloc(sizeof(t_point) * a);
+		map[y] = (t_point*)malloc(sizeof(t_point) * a);
 		loop(curr_line, map, y, scene);
 		y++;
 		free2d_array(curr_line);
 		free(str);
 	}
 	scene->map_h = y;
-	map[y] = NULL;
 	return (map);
 }
