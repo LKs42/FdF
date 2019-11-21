@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:08:59 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/21 17:08:50 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/21 18:25:17 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,16 +91,15 @@ void	file_error(t_scene *scene, int b)
 
 t_point	**fileread(int fd, t_scene *scene)
 {
+	t_point **map;
 	char	**curr_line;
 	char	*str;
 	int		y;
 	int		a;
-	t_point **map;
 
-	a = 0;
+	y = 0;
 	if ((map = (t_point**)malloc(sizeof(t_point*))) == NULL)
 		file_error(scene, 0);
-	y = 0;
 	while (get_next_line(fd, &str) > 0)
 	{
 		if (check_line(str, scene) == 0)
@@ -112,8 +111,7 @@ t_point	**fileread(int fd, t_scene *scene)
 			a++;
 		if ((map[y] = (t_point*)malloc(sizeof(t_point) * a)) == NULL)
 			file_error(scene, 0);
-		loop(curr_line, map, y, scene);
-		y++;
+		loop(curr_line, map, y++, scene);
 		free(str);
 	}
 	scene->map_h = y;
