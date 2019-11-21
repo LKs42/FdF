@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:08:59 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/21 15:52:16 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/21 17:08:50 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_point	**map_realloc(t_point **map, int y, t_scene *scene)
 	size_t	s;
 
 	s = sizeof(t_point*) * (y + 1);
-	if (map2 = malloc(s) == NULL)
+	if ((map2 = malloc(s)) == NULL)
 		file_error(scene, 0);
 	ft_memcpy(map2, map, s - 1);
 	free(map);
@@ -74,12 +74,17 @@ void	file_error(t_scene *scene, int b)
 	i = -1;
 	mlx_destroy_image(scene->mlx_ptr, scene->img_ptr);
 	mlx_destroy_window(scene->mlx_ptr, scene->win_ptr);
-	free(scene->point_a);
-	free(scene->point_b);
-	while (++i < scene->map_h)
-		free(scene->map[i]);
-	free(scene->map);
-	free(scene);
+	if (scene->point_a)
+		free(scene->point_a);
+	if (scene->point_b)
+		free(scene->point_b);
+	if (scene->map_h != 0)
+		while (++i < scene->map_h)
+			free(scene->map[i]);
+	if (scene->map)
+		free(scene->map);
+	if (scene)
+		free(scene);
 	b ? usage() : 0;
 	exit(0);
 }
@@ -93,7 +98,7 @@ t_point	**fileread(int fd, t_scene *scene)
 	t_point **map;
 
 	a = 0;
-	if (map = (t_point**)malloc(sizeof(t_point*)) == NULL)
+	if ((map = (t_point**)malloc(sizeof(t_point*))) == NULL)
 		file_error(scene, 0);
 	y = 0;
 	while (get_next_line(fd, &str) > 0)
@@ -105,7 +110,7 @@ t_point	**fileread(int fd, t_scene *scene)
 		a = 0;
 		while (curr_line[a] != NULL)
 			a++;
-		if (map[y] = (t_point*)malloc(sizeof(t_point) * a) == NULL)
+		if ((map[y] = (t_point*)malloc(sizeof(t_point) * a)) == NULL)
 			file_error(scene, 0);
 		loop(curr_line, map, y, scene);
 		y++;
