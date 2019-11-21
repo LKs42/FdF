@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 18:52:26 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/06 17:50:15 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/21 15:11:19 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	state_hud(t_scene *scene)
 void	draw_hud(t_scene *scene)
 {
 	char *str;
-
 
 	mlx_string_put(scene->mlx_ptr, scene->win_ptr,
 			30, 50, 0xFFFFFF, scene->title);
@@ -63,8 +62,9 @@ void	draw_scene(t_scene *scene)
 	while (++i < scene->map_h)
 	{
 		while (++j < scene->map_w - 1)
-			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene,
-						scene->point_a), ft_rot_matrix(&scene->map[i][j + 1], scene, scene->point_b));
+			liner(scene->str, ft_rot_matrix(&scene->map[i][j],
+scene, scene->point_a),
+ft_rot_matrix(&scene->map[i][j + 1], scene, scene->point_b));
 		j = -1;
 	}
 	i = -1;
@@ -72,7 +72,8 @@ void	draw_scene(t_scene *scene)
 	{
 		while (++j < scene->map_w)
 			liner(scene->str, ft_rot_matrix(&scene->map[i][j], scene,
-						scene->point_a), ft_rot_matrix(&scene->map[i + 1][j], scene, scene->point_b));
+						scene->point_a),
+ft_rot_matrix(&scene->map[i + 1][j], scene, scene->point_b));
 		j = -1;
 	}
 }

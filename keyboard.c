@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   keyboard.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:21:29 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/20 18:11:19 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/21 15:27:07 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		deal_key(int key, t_scene *scene)
 	key_event(key, scene);
 	if (key == 53)
 	{
-		file_error(scene);
+		file_error(scene, 0);
 	}
 	if (key == 99)
 		map_iter(scene, change_color, 2);
