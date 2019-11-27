@@ -6,7 +6,7 @@
 /*   By: lugibone <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:24:42 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/21 15:10:03 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/11/27 19:11:53 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ int	main(int argc, char **argv)
 	if (argc == 2 && (!(check_extension(argv[1], ".fdf"))))
 		scene = init_scene(WIDTH, HEIGHT, argv[1], argv);
 	else
+	{
+		usage();
 		return (0);
+	}
 	fill_img(scene, scene->bg_color);
 	show_map(scene);
 	draw_scene(scene);
