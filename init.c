@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 19:21:05 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/21 18:28:26 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/12/02 15:08:57 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	set_scene(t_scene *scene)
 t_scene	*init_scene(int w, int h, char *str, char **argv)
 {
 	t_scene *scene;
+	int		fd;
 
 	scene = malloc(sizeof(t_scene));
 	scene->point_a = malloc(sizeof(t_point*));
@@ -46,6 +47,9 @@ t_scene	*init_scene(int w, int h, char *str, char **argv)
 scene->win_width, scene->win_height);
 	scene->str = (int*)mlx_get_data_addr(scene->img_ptr,
 &scene->bpp, &scene->sl, &scene->endian);
-	scene->map = fileread(open(argv[1], O_RDONLY), scene);
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		file_error(scene, 1);
+	scene->map = fileread(fd, scene);
 	return (scene);
 }
