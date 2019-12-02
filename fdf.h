@@ -6,7 +6,7 @@
 /*   By: lugibone <lugibone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/03 14:46:58 by lugibone          #+#    #+#             */
-/*   Updated: 2019/11/27 18:28:49 by lugibone         ###   ########.fr       */
+/*   Updated: 2019/12/02 14:51:29 by lugibone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define FDF_H
 # include "libft.h"
 # include "mlx.h"
-# define WIDTH 750 
+# define WIDTH 750
 # define HEIGHT 750
 
 t_scene	*init_scene(int w, int h, char *str, char **argv);
